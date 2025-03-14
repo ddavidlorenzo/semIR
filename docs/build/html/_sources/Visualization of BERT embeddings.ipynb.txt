@@ -49,7 +49,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "c:\\Users\\David\\Desktop\\BBVA\\env3.11\\Lib\\site-packages\\tqdm\\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html\n",
+      "c:\\Users\\David\\Desktop\\semIR\\env3.11\\Lib\\site-packages\\tqdm\\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html\n",
       "  from .autonotebook import tqdm as notebook_tqdm\n"
      ]
     }
@@ -1949,7 +1949,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "c:\\Users\\David\\Desktop\\BBVA\\env3.11\\Lib\\site-packages\\sklearn\\manifold\\_t_sne.py:1164: FutureWarning:\n",
+      "c:\\Users\\David\\Desktop\\semIR\\env3.11\\Lib\\site-packages\\sklearn\\manifold\\_t_sne.py:1164: FutureWarning:\n",
       "\n",
       "'n_iter' was renamed to 'max_iter' in version 1.5 and will be removed in 1.7.\n",
       "\n"
@@ -5327,7 +5327,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "c:\\Users\\David\\Desktop\\BBVA\\env3.11\\Lib\\site-packages\\sklearn\\manifold\\_t_sne.py:1164: FutureWarning:\n",
+      "c:\\Users\\David\\Desktop\\semIR\\env3.11\\Lib\\site-packages\\sklearn\\manifold\\_t_sne.py:1164: FutureWarning:\n",
       "\n",
       "'n_iter' was renamed to 'max_iter' in version 1.5 and will be removed in 1.7.\n",
       "\n"
