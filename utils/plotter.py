@@ -263,7 +263,7 @@ def plot_bert_embs_nn(
     random_state: int = None,
 ) -> tuple[go.Figure, go.Figure, Union[PCA, TSNE]]:
     """Visualize the `k` most similar words in `vocab` in the 2D or 3D
-    embedding space. (Disclaimer: sorry about poor code readability).
+    embedding space.
 
     :param model: Bert pretrained model.
     :type model: BertModel
