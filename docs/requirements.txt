@@ -90,7 +90,6 @@ pypandoc==1.15
 pyrsistent==0.20.0
 python-dateutil==2.9.0.post0
 pytz==2025.1
-pywin32==309
 PyYAML==6.0.2
 pyzmq==26.2.1
 referencing==0.36.2
