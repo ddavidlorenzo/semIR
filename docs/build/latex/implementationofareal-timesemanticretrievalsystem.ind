@@ -1,0 +1,148 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter {\sphinxsymbolsname}
+  \item \spxentry{\_\_init\_\_()}\spxextra{lexical\_search.TfIdfSearch method}, \hyperpage{7}
+  \item \spxentry{\_\_init\_\_()}\spxextra{semantic\_search.SemanticSearch method}, \hyperpage{3}
+
+  \indexspace
+  \bigletter A
+  \item \spxentry{annoy\_index()}\spxextra{semantic\_search.SemanticSearch property}, \hyperpage{4}
+  \item \spxentry{append\_overviews\_to\_data()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{11}
+  \item \spxentry{apply\_dimensionality\_reduction()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{17}
+
+  \indexspace
+  \bigletter B
+  \item \spxentry{biencoder()}\spxextra{lexical\_search.TfIdfSearch property}, \hyperpage{8}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{clean\_book\_title()}\spxextra{in module code\_utils.utils}, \hyperpage{11}
+  \item \spxentry{clean\_overview()}\spxextra{in module code\_utils.utils}, \hyperpage{12}
+  \item \spxentry{code\_utils.plotter}
+    \subitem \spxentry{module}, \hyperpage{17}
+  \item \spxentry{code\_utils.utils}
+    \subitem \spxentry{module}, \hyperpage{11}
+  \item \spxentry{compute\_avg\_wordpiece\_tokens()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{12}
+  \item \spxentry{crossencoder()}\spxextra{lexical\_search.TfIdfSearch property}, \hyperpage{8}
+  \item \spxentry{crossencoder()}\spxextra{semantic\_search.SemanticSearch property}, \hyperpage{4}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{display\_embeddings\_scatterplot\_2D()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{17}
+  \item \spxentry{display\_embeddings\_scatterplot\_3D()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{18}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{evaluate\_n\_trees()}\spxextra{in module experiment\_annoy\_ntrees}, 
+		\hyperpage{21}
+  \item \spxentry{evaluate\_summarization\_candidates()}\spxextra{in module experiment\_text\_summarization}, 
+		\hyperpage{21}
+  \item \spxentry{experiment\_annoy\_ntrees}
+    \subitem \spxentry{module}, \hyperpage{21}
+  \item \spxentry{experiment\_text\_summarization}
+    \subitem \spxentry{module}, \hyperpage{21}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{fix\_punctuation()}\spxextra{in module code\_utils.utils}, \hyperpage{12}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{generate\_dataframe\_from\_sparse\_txts()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{12}
+  \item \spxentry{get\_bert\_model()}\spxextra{in module code\_utils.utils}, \hyperpage{13}
+  \item \spxentry{get\_bert\_tokenizer()}\spxextra{in module code\_utils.utils}, \hyperpage{13}
+  \item \spxentry{get\_crossencoder()}\spxextra{in module code\_utils.utils}, \hyperpage{13}
+  \item \spxentry{get\_dir\_files\_content()}\spxextra{in module code\_utils.utils}, \hyperpage{13}
+  \item \spxentry{get\_file\_id\_and\_content()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{13}
+  \item \spxentry{get\_sentence\_transformer()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{13}
+  \item \spxentry{get\_tokenized\_text()}\spxextra{in module code\_utils.utils}, \hyperpage{14}
+  \item \spxentry{get\_top\_k\_sentences()}\spxextra{in module code\_utils.utils}, \hyperpage{14}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{histogram\_embeddings\_nn()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{18}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{lexical\_search}
+    \subitem \spxentry{module}, \hyperpage{7}
+  \item \spxentry{load\_corpus()}\spxextra{in module code\_utils.utils}, \hyperpage{14}
+  \item \spxentry{load\_embeddings()}\spxextra{in module code\_utils.utils}, \hyperpage{14}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{makedir()}\spxextra{in module code\_utils.utils}, \hyperpage{15}
+  \item \spxentry{module}
+    \subitem \spxentry{code\_utils.plotter}, \hyperpage{17}
+    \subitem \spxentry{code\_utils.utils}, \hyperpage{11}
+    \subitem \spxentry{experiment\_annoy\_ntrees}, \hyperpage{21}
+    \subitem \spxentry{experiment\_text\_summarization}, \hyperpage{21}
+    \subitem \spxentry{lexical\_search}, \hyperpage{7}
+    \subitem \spxentry{semantic\_search}, \hyperpage{3}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{plot\_bert\_embeddings\_nn()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{18}
+  \item \spxentry{plot\_heatmap()}\spxextra{in module code\_utils.plotter}, \hyperpage{19}
+  \item \spxentry{plot\_heatmap\_embeddings()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{19}
+  \item \spxentry{plot\_scatter\_with\_secondary\_y\_axis()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{19}
+  \item \spxentry{prepare\_input\_encoder()}\spxextra{in module code\_utils.utils}, \hyperpage{15}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{remove\_filename\_from\_path()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{15}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{search()}\spxextra{lexical\_search.TfIdfSearch method}, \hyperpage{8}
+  \item \spxentry{search()}\spxextra{semantic\_search.SemanticSearch method}, \hyperpage{4}
+  \item \spxentry{search\_multiple()}\spxextra{lexical\_search.TfIdfSearch method}, \hyperpage{8}
+  \item \spxentry{search\_multiple()}\spxextra{semantic\_search.SemanticSearch method}, 
+		\hyperpage{4}
+  \item \spxentry{semantic\_search}
+    \subitem \spxentry{module}, \hyperpage{3}
+  \item \spxentry{SemanticSearch}\spxextra{class in semantic\_search}, \hyperpage{3}
+  \item \spxentry{setup\_annoy()}\spxextra{semantic\_search.SemanticSearch method}, \hyperpage{5}
+  \item \spxentry{setup\_biencoder()}\spxextra{lexical\_search.TfIdfSearch method}, \hyperpage{8}
+  \item \spxentry{setup\_crossencoder()}\spxextra{lexical\_search.TfIdfSearch method}, 
+		\hyperpage{8}
+  \item \spxentry{setup\_crossencoder()}\spxextra{semantic\_search.SemanticSearch method}, 
+		\hyperpage{5}
+  \item \spxentry{split\_text\_into\_sentences\_nltk()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{15}
+  \item \spxentry{split\_text\_into\_sentences\_spacy()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{15}
+  \item \spxentry{store\_embeddings()}\spxextra{in module code\_utils.utils}, \hyperpage{16}
+  \item \spxentry{summarize\_corpus\_overviews()}\spxextra{in module code\_utils.utils}, 
+		\hyperpage{16}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{test\_annoy\_performance()}\spxextra{semantic\_search.SemanticSearch method}, 
+		\hyperpage{5}
+  \item \spxentry{TfIdfSearch}\spxextra{class in lexical\_search}, \hyperpage{7}
+  \item \spxentry{topk\_cos\_sim()}\spxextra{in module code\_utils.utils}, \hyperpage{16}
+
+  \indexspace
+  \bigletter W
+  \item \spxentry{write\_embeddings\_to\_disk()}\spxextra{in module code\_utils.plotter}, 
+		\hyperpage{19}
+
+\end{sphinxtheindex}

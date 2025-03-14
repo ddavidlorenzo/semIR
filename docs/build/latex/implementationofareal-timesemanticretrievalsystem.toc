@@ -1,0 +1,26 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Semantic search (\sphinxstyleliteralintitle {\sphinxupquote {semantic\_search.py}})}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Lexical search (\sphinxstyleliteralintitle {\sphinxupquote {lexical\_search.py}})}{7}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Code utilities}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Utils (\sphinxstyleliteralintitle {\sphinxupquote {utils.py}})}{11}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Plotter (\sphinxstyleliteralintitle {\sphinxupquote {plotter.py}})}{17}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Code used for experiments.}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Speedup\sphinxhyphen {}recall tradeoff depending on the number of trees used in ANNOY(\sphinxstyleliteralintitle {\sphinxupquote {experiment\_annoy\_ntrees.py}})}{21}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Evaluate text summarization using different values of \sphinxstyleemphasis {k} top sentences (\sphinxstyleliteralintitle {\sphinxupquote {experiment\_text\_summarization.py}})}{21}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Visualization of BERT embeddings.}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction.}{23}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Visualization of kNN neighbours of BERT’s pretrained embeddings.}{23}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Visualizing BERT embeddings with Tensorboard.}{26}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}Exploring BERT contextual representations.}{26}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Exploratory data analysis and data preprocessing.}{29}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction.}{29}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Dataset exploration.}{29}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Remove useless features.}{33}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Integrate book overviews into the dataset.}{33}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Remove instances with invalid language codes.}{35}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Remove noisy data from book titles.}{37}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Remove noisy data from book overviews.}{37}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Annex. Code to perform data scraping.}{38}{section.6.8}%
+\contentsline {chapter}{\numberline {7}Indices and tables}{41}{chapter.7}%
+\contentsline {chapter}{Python Module Index}{43}{section*.55}%
+\contentsline {chapter}{Index}{45}{section*.56}%

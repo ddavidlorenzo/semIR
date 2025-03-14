@@ -1,0 +1,1386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search (search.py) &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to use the Information Retrieval framework." href="search_usage.html" />
+    <link rel="prev" title="Documentation for the implementation of a real-time semantic retrieval system." href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#search.Search"><code class="docutils literal notranslate"><span class="pre">Search</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.__init__"><code class="docutils literal notranslate"><span class="pre">Search.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.biencoder"><code class="docutils literal notranslate"><span class="pre">Search.biencoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.corpus"><code class="docutils literal notranslate"><span class="pre">Search.corpus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.crossencoder"><code class="docutils literal notranslate"><span class="pre">Search.crossencoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.embeddings"><code class="docutils literal notranslate"><span class="pre">Search.embeddings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.encoding_strategy"><code class="docutils literal notranslate"><span class="pre">Search.encoding_strategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.input_encoder"><code class="docutils literal notranslate"><span class="pre">Search.input_encoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.logger"><code class="docutils literal notranslate"><span class="pre">Search.logger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.max_seq_length"><code class="docutils literal notranslate"><span class="pre">Search.max_seq_length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.path_biencoder"><code class="docutils literal notranslate"><span class="pre">Search.path_biencoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.path_crossencoder"><code class="docutils literal notranslate"><span class="pre">Search.path_crossencoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search.Search.path_embs_cache"><code class="docutils literal notranslate"><span class="pre">Search.path_embs_cache</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-semantic_search">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#semantic_search.SemanticSearch"><code class="docutils literal notranslate"><span class="pre">SemanticSearch</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#semantic_search.SemanticSearch.__init__"><code class="docutils literal notranslate"><span class="pre">SemanticSearch.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic_search.SemanticSearch.annoy"><code class="docutils literal notranslate"><span class="pre">SemanticSearch.annoy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic_search.SemanticSearch.get_annoy_index"><code class="docutils literal notranslate"><span class="pre">SemanticSearch.get_annoy_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic_search.SemanticSearch.search"><code class="docutils literal notranslate"><span class="pre">SemanticSearch.search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic_search.SemanticSearch.test_annoy_performance"><code class="docutils literal notranslate"><span class="pre">SemanticSearch.test_annoy_performance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-lexical_search">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lexical_search.TfIdfSearch"><code class="docutils literal notranslate"><span class="pre">TfIdfSearch</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lexical_search.TfIdfSearch.__init__"><code class="docutils literal notranslate"><span class="pre">TfIdfSearch.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lexical_search.TfIdfSearch.search"><code class="docutils literal notranslate"><span class="pre">TfIdfSearch.search()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#code-utilities">Code utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.utils">Utils (<code class="docutils literal notranslate"><span class="pre">utils.py</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.append_overviews_to_data"><code class="docutils literal notranslate"><span class="pre">append_overviews_to_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.clean_book_title"><code class="docutils literal notranslate"><span class="pre">clean_book_title()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.clean_overview"><code class="docutils literal notranslate"><span class="pre">clean_overview()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.compute_avg_wordpiece_tokens"><code class="docutils literal notranslate"><span class="pre">compute_avg_wordpiece_tokens()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.fix_punctuation"><code class="docutils literal notranslate"><span class="pre">fix_punctuation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.generate_dataframe_from_sparse_txts"><code class="docutils literal notranslate"><span class="pre">generate_dataframe_from_sparse_txts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_bert_model"><code class="docutils literal notranslate"><span class="pre">get_bert_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_bert_tokenizer"><code class="docutils literal notranslate"><span class="pre">get_bert_tokenizer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_crossencoder"><code class="docutils literal notranslate"><span class="pre">get_crossencoder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_dir_files_content"><code class="docutils literal notranslate"><span class="pre">get_dir_files_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_file_id_and_content"><code class="docutils literal notranslate"><span class="pre">get_file_id_and_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_logger"><code class="docutils literal notranslate"><span class="pre">get_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_sentence_transformer"><code class="docutils literal notranslate"><span class="pre">get_sentence_transformer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_tokenized_text"><code class="docutils literal notranslate"><span class="pre">get_tokenized_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.get_top_k_sentences"><code class="docutils literal notranslate"><span class="pre">get_top_k_sentences()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.load_corpus"><code class="docutils literal notranslate"><span class="pre">load_corpus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.load_embeddings"><code class="docutils literal notranslate"><span class="pre">load_embeddings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.makedir"><code class="docutils literal notranslate"><span class="pre">makedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.pickle_dump"><code class="docutils literal notranslate"><span class="pre">pickle_dump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.pickle_load"><code class="docutils literal notranslate"><span class="pre">pickle_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.prepare_input_encoder"><code class="docutils literal notranslate"><span class="pre">prepare_input_encoder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.remove_filename_from_path"><code class="docutils literal notranslate"><span class="pre">remove_filename_from_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.split_text_into_sentences_nltk"><code class="docutils literal notranslate"><span class="pre">split_text_into_sentences_nltk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.split_text_into_sentences_spacy"><code class="docutils literal notranslate"><span class="pre">split_text_into_sentences_spacy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.store_embeddings"><code class="docutils literal notranslate"><span class="pre">store_embeddings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.summarize_corpus_overviews"><code class="docutils literal notranslate"><span class="pre">summarize_corpus_overviews()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.utils.topk_cos_sim"><code class="docutils literal notranslate"><span class="pre">topk_cos_sim()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.plotter">Plotter (<code class="docutils literal notranslate"><span class="pre">plotter.py</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.heatmap"><code class="docutils literal notranslate"><span class="pre">heatmap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.heatmap_embeddings"><code class="docutils literal notranslate"><span class="pre">heatmap_embeddings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.histogram_embeddings_nn"><code class="docutils literal notranslate"><span class="pre">histogram_embeddings_nn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.plot_bert_embs_nn"><code class="docutils literal notranslate"><span class="pre">plot_bert_embs_nn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.plot_scatter_with_secondary_y_axis"><code class="docutils literal notranslate"><span class="pre">plot_scatter_with_secondary_y_axis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.scatter"><code class="docutils literal notranslate"><span class="pre">scatter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.plotter.write_embeddings_to_disk"><code class="docutils literal notranslate"><span class="pre">write_embeddings_to_disk()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#code-used-for-experiments">Code used for experiments.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-experiment_annoy_ntrees">Speedup-recall tradeoff depending on the number of trees used in ANNOY(<code class="docutils literal notranslate"><span class="pre">experiment_annoy_ntrees.py</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#experiment_annoy_ntrees.evaluate_n_trees"><code class="docutils literal notranslate"><span class="pre">evaluate_n_trees()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-experiment_text_summarization">Evaluate text summarization using different values of <em>k</em> top sentences (<code class="docutils literal notranslate"><span class="pre">experiment_text_summarization.py</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#experiment_text_summarization.evaluate_summarization_candidates"><code class="docutils literal notranslate"><span class="pre">evaluate_summarization_candidates()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/code.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-search">
+<span id="search-search-py"></span><h1>Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)<a class="headerlink" href="#module-search" title="Link to this heading"></a></h1>
+<p>This module defines the common interface for dense and lexical retrieval techniques.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="search.Search">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">search.</span></span><span class="sig-name descname"><span class="pre">Search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#search.Search" title="Link to this definition"></a></dt>
+<dd><p>This class serves as a common interface for dense and lexical retrieval
+techniques.</p>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>This class is not meant to be instantiated - use instead the specialized subclasses defined for
+dense and lexical IR accordingly.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="search.Search.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#search.Search.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor for a <cite>Search</cite> instance.</p>
+<p><strong>Important</strong>: this class is not meant to be directly instantiated.
+Use instead the specialized subclasses defined for dense and lexical
+IR accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>DataFrame</em>) – Book corpus. It should, at least, have the following columns
+(with the very same names):
+* <cite>gr_book_id</cite>: book unique identifier.
+* <cite>title</cite>: book titles.
+* <cite>authors</cite>: book authors.
+* <cite>overview</cite>: book overview.</p></li>
+<li><p><strong>encoding_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Encoding strategy to use. The encoding strategy
+must be a string containing the names of the features to include into
+the input of the encoder, each of them separated by an underscore (‘_’).
+For example, if you were to use the title and the overview as the encoding
+strategy, <cite>encoding_strategy</cite> must be either <cite>title_overview</cite> or <cite>overview_title</cite>.
+Defaults to ‘title_overview’.</p></li>
+<li><p><strong>path_biencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained
+<cite>SentenceTransformer</cite> hosted inside a model repo on HuggingFace. Defaults
+to ‘paraphrase-distilroberta-base-v2’. Defaults to ‘paraphrase-distilroberta-base-v2’.</p></li>
+<li><p><strong>path_embs_cache</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store the computed embeddings
+or load the embeddings from. Defaults to None.</p></li>
+<li><p><strong>max_seq_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Property to get the maximal input sequence
+length for the model. Longer inputs will be truncated. Defaults to 512.</p></li>
+<li><p><strong>path_crossencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained <cite>CrossEncoder</cite> hosted in 
+HuggingFace. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.biencoder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">biencoder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SentenceTransformer</span></em><a class="headerlink" href="#search.Search.biencoder" title="Link to this definition"></a></dt>
+<dd><p>Getter method for <cite>biencoder</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current pretrained Bi-Encoder. If None, the default Bi-Encoder
+is used.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SentenceTransformer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.corpus">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">corpus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><a class="headerlink" href="#search.Search.corpus" title="Link to this definition"></a></dt>
+<dd><p>Book corpus. It should, at least, have the following columns
+(with the very same names):
+* <cite>gr_book_id</cite>: book unique identifier.
+* <cite>title</cite>: book titles.
+* <cite>authors</cite>: book authors.
+* <cite>overview</cite>: book overview.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.crossencoder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">crossencoder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">CrossEncoder</span></em><a class="headerlink" href="#search.Search.crossencoder" title="Link to this definition"></a></dt>
+<dd><p>Getter method for <cite>crossencoder</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current pretrained Cross-Encoder. If None, the default
+Cross-Encoder is used.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>CrossEncoder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.embeddings">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">embeddings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#search.Search.embeddings" title="Link to this definition"></a></dt>
+<dd><p>Get embeddings.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.encoding_strategy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encoding_strategy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#search.Search.encoding_strategy" title="Link to this definition"></a></dt>
+<dd><p>Encoding strategy to use. The encoding strategy
+must be a string containing the names of the features to include into
+the input of the encoder, each of them separated by an underscore (‘_’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.input_encoder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_encoder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#search.Search.input_encoder" title="Link to this definition"></a></dt>
+<dd><p>Get input for the encoder.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Logger</span></em><a class="headerlink" href="#search.Search.logger" title="Link to this definition"></a></dt>
+<dd><p>Logger object.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.max_seq_length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_seq_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#search.Search.max_seq_length" title="Link to this definition"></a></dt>
+<dd><p>Property to get the maximal input sequence
+length for the model. Longer inputs will be truncated.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.path_biencoder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_biencoder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#search.Search.path_biencoder" title="Link to this definition"></a></dt>
+<dd><p>Model id of a pretrained sentence transformer hosted on HuggingFace.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.path_crossencoder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_crossencoder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#search.Search.path_crossencoder" title="Link to this definition"></a></dt>
+<dd><p>Model <cite>id</cite> of a pretrained <cite>CrossEncoder</cite> hosted in 
+HuggingFace.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="search.Search.path_embs_cache">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_embs_cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#search.Search.path_embs_cache" title="Link to this definition"></a></dt>
+<dd><p>Filepath to store the computed embeddings or load the
+embeddings from.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-semantic_search">
+<span id="semantic-search-semantic-search-py"></span><h1>Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)<a class="headerlink" href="#module-semantic_search" title="Link to this heading"></a></h1>
+<p>This module implements a semantic textual information retrieval system.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">semantic_search.</span></span><span class="sig-name descname"><span class="pre">SemanticSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_annoy_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annoy_n_trees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annoy_emb_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#semantic_search.SemanticSearch" title="Link to this definition"></a></dt>
+<dd><p>This class implements a semantic textual information retrieval system,
+which allows for advanced features like retrieve and re-rank and Approximate
+Nearest Neighbours search.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_annoy_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annoy_n_trees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annoy_emb_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#semantic_search.SemanticSearch.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor for a <cite>SemanticSearch</cite> instance.</p>
+<p><strong>Important</strong>: if you are willing to load the embeddings or the ANNOY
+index from disk you do not need to tune their respective specific
+parameters (they will be overlooked).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>DataFrame</em>) – Book corpus. It should, at least, have the following columns
+(with the very same names):
+* <cite>gr_book_id</cite>: book unique identifier.
+* <cite>title</cite>: book titles.
+* <cite>authors</cite>: book authors.
+* <cite>overview</cite>: book overview.</p></li>
+<li><p><strong>path_embs_cache</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store the computed embeddings
+or load the embeddings from. Defaults to None.</p></li>
+<li><p><strong>encoding_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Encoding strategy to use. The encoding strategy
+must be a string containing the names of the features to include into
+the input of the encoder, each of them separated by an underscore (‘_’).
+For example, if you were to use the title and the overview as the encoding
+strategy, <cite>encoding_strategy</cite> must be either <cite>title_overview</cite> or <cite>overview_title</cite>.
+Defaults to ‘title_overview’.</p></li>
+<li><p><strong>path_biencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained
+<cite>SentenceTransformer</cite> hosted inside a model repo on HuggingFace. Defaults
+to ‘paraphrase-distilroberta-base-v2’. Defaults to ‘paraphrase-distilroberta-base-v2’.</p></li>
+<li><p><strong>max_seq_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Property to get the maximal input sequence
+length for the model. Longer inputs will be truncated. Defaults to 512.</p></li>
+<li><p><strong>path_crossencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained <cite>CrossEncoder</cite> hosted in 
+HuggingFace. Defaults to None.</p></li>
+<li><p><strong>path_annoy_cache</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store an ANNOY index or load
+it from disk. Defaults to None.</p></li>
+<li><p><strong>annoy_n_trees</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of trees to use in the forest for ANNOY.
+Defaults to 576</p></li>
+<li><p><strong>annoy_emb_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the embeddings, required to compute
+the index. Defaults to 768</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch.annoy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">annoy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annoy</span></em><a class="headerlink" href="#semantic_search.SemanticSearch.annoy" title="Link to this definition"></a></dt>
+<dd><p>Getter method for <cite>annoy</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current ANNOY index. If none, it attempts to create a new one
+with the optimal configuration (according to the experiments detailed
+in the dissertation document).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>AnnoyIndex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch.get_annoy_index">
+<span class="sig-name descname"><span class="pre">get_annoy_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_cache_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#semantic_search.SemanticSearch.get_annoy_index" title="Link to this definition"></a></dt>
+<dd><p>Get ANNOY index. Use this method to:</p>
+<ul class="simple">
+<li><p>Use a precomputed ANNOY index located in <cite>index_cache_path</cite>.</p></li>
+<li><dl class="simple">
+<dt>Create a new ANNOY index and store it in <cite>index_cache_path</cite>.</dt><dd><p>if <cite>index_cache_path</cite> is <cite>None</cite>, the index will not be stored in disk.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Either way, the obtained ANNOY index will be used in future calls</dt><dd><p>to <cite>search</cite> and <cite>search_multiple</cite> if approximate search is chosen.</p>
+</dd>
+</dl>
+</li>
+<li><p>Previous ANNOY setup is replaced upon invoking this method.</p></li>
+</ul>
+<p><strong>IMPORTANT</strong>: if you are attempting to load an ANNOY index from disk, there
+is no need to tune the remaining parameters (i.e., <cite>n_trees</cite> and
+<cite>embedding_size</cite>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_cache_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store the obtained ANNOY index or filepath
+of a precomputed ANNOY index. By default is <cite>None</cite>: a new ANNOY index will be
+created with the indicated parameters.</p></li>
+<li><p><strong>n_trees</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of trees to use in the forest for ANNOY, defaults to 576.</p></li>
+<li><p><strong>embedding_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the embeddings, required to compute the index.
+Defaults to 768</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_annoy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reranking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="headerlink" href="#semantic_search.SemanticSearch.search" title="Link to this definition"></a></dt>
+<dd><p>Perform semantic search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>str</em>) – Textual query.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of most relevant documents to retrieve. When using exhaustive
+search, the value of <cite>k</cite> does not affect perfomance. Complexity using ANNOY and
+<cite>k</cite> ~ corpus length will be close to O(n). Defaults to 5</p></li>
+<li><p><strong>k_biencoder</strong> (<em>int</em><em>, </em><em>optional</em>) – If using retrieve and re-rank, number of documents to
+retrieve by the Bi-encoder and fed into the Cross-Encoder. The Cross-Encoder will
+return the <cite>k</cite> most relevant entries. <cite>k_biencoder</cite> must be greater or equal to
+<cite>k</cite>. Defaults to 20.</p></li>
+<li><p><strong>use_annoy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use approximate search to reduce search time to approx O(log(n)).
+Defaults to False</p></li>
+<li><p><strong>reranking</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use retrieve and Re-Rank Pipeline, defaults to False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="semantic_search.SemanticSearch.test_annoy_performance">
+<span class="sig-name descname"><span class="pre">test_annoy_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#semantic_search.SemanticSearch.test_annoy_performance" title="Link to this definition"></a></dt>
+<dd><p>Utility to test the performance of ANNOY, considering the speedup with respect to
+exhaustive search and the recall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queries</strong> (<em>list</em><em> or </em><em>array-like</em>) – Collection of textual queries.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Top k elements to consider in the comparison.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-lexical_search">
+<span id="lexical-search-lexical-search-py"></span><h1>Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)<a class="headerlink" href="#module-lexical_search" title="Link to this heading"></a></h1>
+<p>This module implements a textual literal information retrieval system.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lexical_search.TfIdfSearch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lexical_search.</span></span><span class="sig-name descname"><span class="pre">TfIdfSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors_cache_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lexical_search.TfIdfSearch" title="Link to this definition"></a></dt>
+<dd><p>This class implements a textual literal information retrieval system,
+based on TF-IDF which allows for advanced features like hybrid search,
+combining literal and dense search (retrieve and re-rank search pipeline).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lexical_search.TfIdfSearch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors_cache_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'title_overview'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_biencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_embs_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_crossencoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lexical_search.TfIdfSearch.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor for a <cite>TfIdfSearch</cite> instance.</p>
+<p><strong>Important</strong>: if you are willing to load the embeddings or the vectors
+from disk you do not need to tune their respective specific parameters
+(they will be overlooked).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>DataFrame</em>) – Book corpus. It should, at least, have the following columns
+(with the very same names):
+* <cite>gr_book_id</cite>: book unique identifier.
+* <cite>title</cite>: book titles.
+* <cite>authors</cite>: book authors.
+* <cite>overview</cite>: book overview.</p></li>
+<li><p><strong>vectors_cache_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store the computed vectors
+or load the vectors from. Defaults to None.</p></li>
+<li><p><strong>encoding_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Encoding strategy to use. The encoding strategy
+must be a string containing the names of the features to include into
+the input of the encoder, each of them separated by an underscore (‘_’).
+For example, if you were to use the title and the overview as the encoding
+strategy, <cite>encoding_strategy</cite> must be either <cite>title_overview</cite> or <cite>overview_title</cite>.
+Defaults to ‘title_overview’.</p></li>
+<li><p><strong>path_biencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – The model <cite>id</cite> of a pretrained
+<cite>SentenceTransformer</cite> hosted inside a model repo on HuggingFace. Defaults
+to ‘paraphrase-distilroberta-base-v2’. Defaults to None.</p></li>
+<li><p><strong>path_embs_cache</strong> (<em>str</em><em>, </em><em>optional</em>) – Filepath to store the computed embeddings
+or load the embeddings from. Defaults to None.</p></li>
+<li><p><strong>max_seq_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Property to get the maximal input sequence
+length for the model. Longer inputs will be truncated. Defaults to 512.</p></li>
+<li><p><strong>path_crossencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained <cite>CrossEncoder</cite> hosted in HuggingFace. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lexical_search.TfIdfSearch.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_lexical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reranking_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'crossencoder'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'biencoder'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="headerlink" href="#lexical_search.TfIdfSearch.search" title="Link to this definition"></a></dt>
+<dd><p>Perform TF-IDF lexical search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queries</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Textual queries.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of most relevant documents to retrieve.</p></li>
+<li><p><strong>k_lexical</strong> (<em>int</em><em>, </em><em>optional</em>) – If using retrieve and re-rank, number of documents to
+retrieve by lexical search and re-ranked by any re-ranking strategy. Re-Ranker
+will return the <cite>k</cite> most relevant entries. <cite>k_lexical</cite> must be greater or equal
+to <cite>k</cite>. Defaults to 20.</p></li>
+<li><p><strong>reranking_strategy</strong> (<em>Literal</em><em>[</em><em>'crossencoder'</em><em>, </em><em>'biencoder'</em><em>]</em><em>, </em><em>optional</em>) – Re-ranking strategy to use. Defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raise <cite>ValueError</cite> if <cite>reranking_strategy</cite> takes an ilegal
+value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="code-utilities">
+<h1>Code utilities<a class="headerlink" href="#code-utilities" title="Link to this heading"></a></h1>
+<p>Documentation for the <cite>utils</cite> Python package.</p>
+<section id="module-utils.utils">
+<span id="utils-utils-py"></span><h2>Utils (<code class="docutils literal notranslate"><span class="pre">utils.py</span></code>)<a class="headerlink" href="#module-utils.utils" title="Link to this heading"></a></h2>
+<p>Set of miscellaneous utilities used across the implementation.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.append_overviews_to_data">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">append_overviews_to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_overviews</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overview_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gr_book_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gr_book_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_option</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'right'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#utils.utils.append_overviews_to_data" title="Link to this definition"></a></dt>
+<dd><p>Merge <cite>df_overviews</cite> with <cite>df_data</cite> using column identifiers <cite>overview_index</cite> and
+<cite>data_index</cite>, respectively. We allow books with no overviews, hence <em>right join</em>
+is the most suitable operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_overviews</strong> (<em>pd.DataFrame</em>) – Book overviews.</p></li>
+<li><p><strong>df_data</strong> (<em>pd.DataFrame</em>) – Book data (e.g., title, authors, etc.)</p></li>
+<li><p><strong>overview_index</strong> (<em>str</em><em>, </em><em>optional</em>) – Column or index level names to join on in the left DataFrame,
+defaults to ‘gr_book_id’.</p></li>
+<li><p><strong>data_index</strong> (<em>str</em><em>, </em><em>optional</em>) – Column or index level names to join on in the right DataFrame,
+defaults to ‘gr_book_id’.</p></li>
+<li><p><strong>merge_option</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of merge operation, to be performed can be one of {‘left’,
+‘right’, ‘outer’, ‘inner’}, to ‘right’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame of the two merged objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.clean_book_title">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">clean_book_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_quotation_marks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_saga_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_saga_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#utils.utils.clean_book_title" title="Link to this definition"></a></dt>
+<dd><p>Applies several transformations to a book title to remove noisy data that
+can potentially affect the performance of the embedding strategies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – Book title in plain text.</p></li>
+<li><p><strong>remove_quotation_marks</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to True, attempts to remove the quotation
+marks enclosing the book title, to True.</p></li>
+<li><p><strong>remove_saga_info</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to True, attempts to remove information concerning
+the book saga, defaults to False.</p></li>
+<li><p><strong>remove_saga_number</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to True, attempts to remove the saga number,
+defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed book title.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.clean_overview">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">clean_overview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overview</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#utils.utils.clean_overview" title="Link to this definition"></a></dt>
+<dd><p>Applies several transformations to a book overview to remove noisy data
+that can potentially affect the performance of the embedding strategies.
+One must be careful when applying transformations to the whole corpus because
+the odds for negative side-effects are high. Here, we attempt to solve some of the
+problems spotted that, in our tests, should not have any noticeable negative effect
+on any book overview.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>overview</strong> (<em>str</em>) – Book overview in plain text.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed book overview.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.compute_avg_wordpiece_tokens">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">compute_avg_wordpiece_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertTokenizer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#utils.utils.compute_avg_wordpiece_tokens" title="Link to this definition"></a></dt>
+<dd><p>Compute the average number of WordPiece tokens in a list of documents, <cite>corpus</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>list</em><em> or </em><em>array-like</em>) – List of textual documents.</p></li>
+<li><p><strong>tokenizer</strong> (<em>BertTokenizer</em><em>, </em><em>optional</em>) – Instance of <cite>BertTokenizer</cite> class. If <cite>None</cite>, it loads the
+pretrained tokenizer of ‘bert-base-uncased’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Average number of WordPiece tokens of the documents in <cite>corpus</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.fix_punctuation">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">fix_punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overview</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#utils.utils.fix_punctuation" title="Link to this definition"></a></dt>
+<dd><p>Attempts to fix some of the identified punctuation issues present in the
+book overviews.</p>
+<dl class="simple">
+<dt>It is a common issue to find overviews with the following punctuation flaw:</dt><dd><ul class="simple">
+<li><p>“[…] word.Word […]”</p></li>
+<li><p>“[…] word!Word […]”</p></li>
+<li><p>“[…] word?Word […]”</p></li>
+</ul>
+</dd>
+</dl>
+<p>That is to say, spacing after periods, exclamation and question marks is not
+correctly applied. This lead to some issues when splitting the text into sentences,
+specially using the NLTK library. Furthermore, it may have other adverse effects
+on the embedding process (e.g., due to faulty tokenization).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>overview</strong> (<em>str</em>) – Book overview in plain text.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Book overview without the identified punctuation flaws.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.generate_dataframe_from_sparse_txts">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">generate_dataframe_from_sparse_txts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_standard_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#utils.utils.generate_dataframe_from_sparse_txts" title="Link to this definition"></a></dt>
+<dd><p>Generates a dataframe from all <em>txt</em> files located in <cite>base_dir</cite>. The dataframe
+features two columns: <cite>gr_book_id</cite>, an identifier that is retrieved from the name of
+each <em>txt</em> file, and <cite>overview</cite>, containing all information included in the <em>txt</em> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_dir</strong> (<em>str</em>) – Directory in which the <em>txt</em> files for the book overviews
+are located.</p></li>
+<li><p><strong>path_standard_format</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the path follows the standard
+format (backslash separator) or the slash separator, defaults to False.</p></li>
+<li><p><strong>out_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Path for the output file, defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns a dataframe from all txt files located in <cite>base_dir</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_bert_model">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_bert_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bert-base-uncased'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BertModel</span></span></span><a class="headerlink" href="#utils.utils.get_bert_model" title="Link to this definition"></a></dt>
+<dd><p>Get an instance of the class <cite>BertModel</cite> for transformer <cite>trasformer</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformer</strong> (<em>str</em><em>, </em><em>optional</em>) – model <cite>id</cite> of a checkpoint hosted inside a
+model repo on huggingface.co, defaults to “bert-base-uncased”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance of <cite>BertModel</cite> class</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BertModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_bert_tokenizer">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_bert_tokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bert-base-uncased'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BertTokenizer</span></span></span><a class="headerlink" href="#utils.utils.get_bert_tokenizer" title="Link to this definition"></a></dt>
+<dd><p>Get an instance of the class <cite>BertTokenizer</cite> for transformer <cite>trasformer</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformer</strong> (<em>str</em><em>, </em><em>optional</em>) – Model <cite>id</cite> of a pretrained tokenizer hosted inside a
+model repo on huggingface.co, defaults to “bert-base-uncased”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance of <cite>BertTokenizer</cite> class</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BertTokenizer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_crossencoder">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_crossencoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crossencoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cross-encoder/stsb-distilroberta-base'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CrossEncoder</span></span></span><a class="headerlink" href="#utils.utils.get_crossencoder" title="Link to this definition"></a></dt>
+<dd><p>Wrapper function to get a <cite>CrossEncoder</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crossencoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Any model name from Huggingface Models repository that can
+be loaded with AutoModel. Defaults to ‘cross-encoder/stsb-distilroberta-base’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a CrossEncoder that takes exactly two sentences/texts as input and predicts
+a score for this sentence pair.It can for example predict the similarity of the
+sentence pair on a scale of 0 … 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CrossEncoder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_dir_files_content">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_dir_files_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#utils.utils.get_dir_files_content" title="Link to this definition"></a></dt>
+<dd><p>Get the list of files in <cite>directory</cite> with extension <cite>file_extension</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – Directory in which the files are located. Recursive search
+is not allowed.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>optional</em>) – File extension, defaults to ‘.txt’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples (filename, file content).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_file_id_and_content">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_file_id_and_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#utils.utils.get_file_id_and_content" title="Link to this definition"></a></dt>
+<dd><p>Returns all textual content in`filepath`</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> – Path of the text file to read.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Content of the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_logger">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#utils.utils.get_logger" title="Link to this definition"></a></dt>
+<dd><p>Returns logger object for module with name <cite>name</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of the logger</p></li>
+<li><p><strong>log_level</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – log level, defaults to logging.INFO</p></li>
+<li><p><strong>stream_handler</strong> (<em>bool</em><em>, </em><em>optional</em>) – include stream handler, defaults to True</p></li>
+<li><p><strong>file_handler</strong> (<em>bool</em><em>, </em><em>optional</em>) – include file handler, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_sentence_transformer">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_sentence_transformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'paraphrase-distilroberta-base-v2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SentenceTransformer</span></span></span><a class="headerlink" href="#utils.utils.get_sentence_transformer" title="Link to this definition"></a></dt>
+<dd><p>Wrapper function to get a <cite>SentenceTransformer</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transformer</strong> (<em>str</em><em>, </em><em>optional</em>) – The model <cite>id</cite> of a pretrained <cite>SentenceTransformer</cite> hosted
+inside a model repo on HuggingFace. Defaults to ‘paraphrase-distilroberta-base-v2’.</p></li>
+<li><p><strong>max_seq_length</strong> (<em>int</em>) – Property to get the maximal input sequence length
+for the model. Longer inputs will be truncated. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a SentenceTransformer model that can be used to map sentences / text
+to embeddings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SentenceTransformer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_tokenized_text">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_tokenized_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.get_tokenized_text" title="Link to this definition"></a></dt>
+<dd><p>Get the list of WordPiece tokens in <cite>text</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to tokenize</p></li>
+<li><p><strong>tokenizer</strong> (<em>BertTokenizer</em><em>, </em><em>optional</em>) – Instance of <cite>BertTokenizer</cite> class. If <cite>None</cite>, it loads the
+pretrained tokenizer of ‘bert-base-uncased’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of WordPiece tokens.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.get_top_k_sentences">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_top_k_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SentenceTransformer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Language</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.get_top_k_sentences" title="Link to this definition"></a></dt>
+<dd><p>Get the top <cite>k</cite> most meaningful sentences of <cite>document</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>str</em>) – a document in plain text</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Top k sentences to return, defaults to 5</p></li>
+<li><p><strong>embedder</strong> (<em>SentenceTransformer</em><em>, </em><em>optional</em>) – Instance of <cite>SentenceTransformer</cite>. If <cite>None</cite>, it loads the
+default pretrained sentence transformer model. Defaults to None.</p></li>
+<li><p><strong>spacy_model</strong> (<em>spacy.language.Language</em><em>, </em><em>optional</em>) – Pretrained tokenizer model. If <cite>None</cite>, it
+loads the default model. Defaults to None.</p></li>
+<li><p><strong>preserve_order</strong> (<em>bool</em><em>, </em><em>optional</em>) – Preserve the order of the top k sentences with respect
+to the original document to conserve spatial dependencies between sentences.
+Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Top <cite>k</cite> most meaningful sentences of <cite>document</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.load_corpus">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">load_corpus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#utils.utils.load_corpus" title="Link to this definition"></a></dt>
+<dd><p>Wrapper method of Pandas <cite>read_csv</cite> function to load book corpus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_corpus</strong> (<em>str</em>) – Filepath to the corpus.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – Delimiter to use, defaults to ‘,’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Corpus DataFrame</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.load_embeddings">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">load_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_dict_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.utils.load_embeddings" title="Link to this definition"></a></dt>
+<dd><p>Utility to load embeddings (and other optional stored values) from disk
+using <em>pickle</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Filename of the file to be loaded.</p></li>
+<li><p><strong>return_dict_values</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to True, returns the values just the values
+of the dictionary containing all stored data, defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.makedir">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">makedir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exist_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#utils.utils.makedir" title="Link to this definition"></a></dt>
+<dd><p>Creates directory from path if not exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path of the directory to be created.</p></li>
+<li><p><strong>remove_filename</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to True, it attempts to remove the filename from
+the path, defaults to False</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em><em>, </em><em>optional</em>) – Creates directories recursively (i.e., create necessary
+subdirectories if necessary), defaults to True</p></li>
+<li><p><strong>exist_ok</strong> (<em>bool</em><em>, </em><em>optional</em>) – is set to False, arises an error if <cite>path</cite> directory exists,
+defaults to True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.pickle_dump">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">pickle_dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#utils.utils.pickle_dump" title="Link to this definition"></a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Data to serialize.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – output filename.</p></li>
+<li><p><strong>protocol</strong> (<em>int</em><em>, </em><em>optional</em>) – pickle serialization protocol, defaults to pickle.HIGHEST_PROTOCOL</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.pickle_load">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">pickle_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.utils.pickle_load" title="Link to this definition"></a></dt>
+<dd><p>Read and return an object from the pickle data stored in a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename of the file to be loaded.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>deserialized data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.prepare_input_encoder">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">prepare_input_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_input_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#utils.utils.prepare_input_encoder" title="Link to this definition"></a></dt>
+<dd><p>Formats the input to the encoder using the features indicated in
+<cite>encoding_strategy</cite>. If <cite>encoding_strategy</cite> takes a wrong value this method
+is likely to fail. Current supported features are ‘title’, ‘authors’ and
+‘overview’.
+:param str encoding_strategy: The encoding strategy must be a string containing
+the names of the features to include into the input of the encoder, each of them
+separated by an underscore (‘_’). For example, if you were to use the title and
+the overview as the encoding strategy, <cite>encoding_strategy</cite> must be either
+<cite>title_overview</cite> or <cite>overview_title</cite>.
+:param str path_df: Path in which the dataframe is located.
+:param return_input_encoder: Return just the collection of inputs to the encoder,
+defaults to True
+:type return_input_encoder: bool, optional
+:return: If <cite>return_input_encoder</cite>, returns the collection of inputs to the encoder.
+Otherwise, it returns Dataframe including a new column <cite>input_encoder</cite> with the
+format indicated in <cite>encoding_strategy</cite>
+:rtype: Union[list[str], pd.DataFrame]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.remove_filename_from_path">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">remove_filename_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_standard_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#utils.utils.remove_filename_from_path" title="Link to this definition"></a></dt>
+<dd><p>Attempts to remove filename from the provided path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_filename</strong> (<em>str</em>) – Filepath.</p></li>
+<li><p><strong>path_standard_format</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the path follows the standard
+format (backslash separator) or the slash separator, defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The directory excluding the filename.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.split_text_into_sentences_nltk">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">split_text_into_sentences_nltk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.split_text_into_sentences_nltk" title="Link to this definition"></a></dt>
+<dd><p>Splits text into sentences using the NLTK library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Text to be splitted into sentences.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of sentences in <cite>text</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.split_text_into_sentences_spacy">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">split_text_into_sentences_spacy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.split_text_into_sentences_spacy" title="Link to this definition"></a></dt>
+<dd><p>Splits text into sentences using the Spacy library. SpaCy builds a syntactic
+tree for each sentence, a robust method that yields more statistical information
+about the text than NLTK. It performs substancially better than NLTK when using
+not polished text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to be splitted into sentences.</p></li>
+<li><p><strong>spacy_model</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the spacy pretrained model used to split text into
+sentences, defaults to ‘en_core_web_sm’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of sentences in <cite>text</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.store_embeddings">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">store_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus_embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'embeddings.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.utils.store_embeddings" title="Link to this definition"></a></dt>
+<dd><p>Utility to dump embeddings (and other optional values indicated in the
+keyword arguments) to disk using <em>pickle</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus_embeddings</strong> – Tensor type data structure containing the embeddings
+for the corpus.</p></li>
+<li><p><strong>out_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Path for the output file, defaults to ‘embeddings.pkl’.</p></li>
+<li><p><strong>protocol</strong> – Protocol used for <em>pickle</em>, defaults to <cite>pickle.HIGHEST_PROTOCOL</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.summarize_corpus_overviews">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">summarize_corpus_overviews</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus_overviews</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SentenceTransformer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Language</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.summarize_corpus_overviews" title="Link to this definition"></a></dt>
+<dd><p>Apply unsupervised Text Summarization techniques to obtain representations for
+the most meaningful sentences for each document in <cite>corpus_overviews</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus_overviews</strong> (<em>list</em><em> or </em><em>array-like</em>) – Book overviews.</p></li>
+<li><p><strong>top_k</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of sentences that will have each overview. Defaults to 5.</p></li>
+<li><p><strong>embedder</strong> (<em>SentenceTransformer</em><em>, </em><em>optional</em>) – Instance of <cite>SentenceTransformer</cite>. If <cite>None</cite>, it loads the default
+pretrained sentence transformer model. Defaults to None.</p></li>
+<li><p><strong>spacy_model</strong> (<em>spacy.language.Language</em><em>, </em><em>optional</em>) – Pretrained tokenizer model. If <cite>None</cite>, it
+loads the default model. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Summarized overviews with at most <cite>top_k</cite> sentences.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.utils.topk_cos_sim">
+<span class="sig-prename descclassname"><span class="pre">utils.utils.</span></span><span class="sig-name descname"><span class="pre">topk_cos_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_embedding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.utils.topk_cos_sim" title="Link to this definition"></a></dt>
+<dd><p>Get the indices and the cosine similarity score of the <cite>top_k</cite> most similar embeddings
+to <cite>query_embedding</cite> in <cite>embeddings</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_embedding</strong> (<em>Tensor</em>) – Query embedding.</p></li>
+<li><p><strong>embeddings</strong> (<em>Tensor</em>) – Corpus embeddings.</p></li>
+<li><p><strong>top_k</strong> (<em>int</em>) – Top k most similar to retrieve according to cosine similarity
+score.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of scores and list of indexes of the top k results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(list, list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-utils.plotter">
+<span id="plotter-plotter-py"></span><h2>Plotter (<code class="docutils literal notranslate"><span class="pre">plotter.py</span></code>)<a class="headerlink" href="#module-utils.plotter" title="Link to this heading"></a></h2>
+<p>Set of plotting utilities used across the implementation.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.heatmap">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_continuous_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#utils.plotter.heatmap" title="Link to this definition"></a></dt>
+<dd><p>Plot heatmap. Wrapper of the plotly <cite>imshow</cite> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array-like</em>) – 2D data to be plotted.</p></li>
+<li><p><strong>color_continuous_scale</strong> (<em>str</em><em>, </em><em>optional</em>) – Colour scale to be used in the heatmap,
+defaults to None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.heatmap_embeddings">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">heatmap_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertTokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polysemous_word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_continuous_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.plotter.heatmap_embeddings" title="Link to this definition"></a></dt>
+<dd><p>Plot heatmap of the cosine similarity of all different contextual embeddings
+of <cite>polysemous_word</cite> in <cite>data</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>BertModel</em>) – Bert pretrained model.</p></li>
+<li><p><strong>tokenizer</strong> (<em>BertTokenizer</em>) – Bert precomputed tokenizer.</p></li>
+<li><p><strong>data</strong> (<em>pd.DataFrame</em>) – Test data for WSD evaluation.</p></li>
+<li><p><strong>polysemous_word</strong> (<em>str</em>) – Polysemous word.</p></li>
+<li><p><strong>color_continuous_scale</strong> (<em>str</em><em>, </em><em>optional</em>) – Colour scale to be used in the heatmap,
+defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The collection of the different contextual embeddings, along
+with the labels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.histogram_embeddings_nn">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">histogram_embeddings_nn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.plotter.histogram_embeddings_nn" title="Link to this definition"></a></dt>
+<dd><p>Plot histogram for the nearest neighbors of an embedding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>list</em><em> or </em><em>array-like</em>) – Two dimensional array containing a collection of similar
+words (first component), list of similarity scores (second component),
+and a list of labels (third component).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.plot_bert_embs_nn">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_bert_embs_nn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_words</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'pca'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'tsne'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PCA</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">TSNE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.plotter.plot_bert_embs_nn" title="Link to this definition"></a></dt>
+<dd><p>Visualize the <cite>k</cite> most similar words in <cite>vocab</cite> in the 2D or 3D
+embedding space. (Disclaimer: sorry about poor code readability).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>BertModel</em>) – Bert pretrained model.</p></li>
+<li><p><strong>vocab</strong> (<em>dict</em>) – Tokenizer vocabulary.</p></li>
+<li><p><strong>input_words</strong> (<em>Iterable</em>) – Words, the KNN of which are to be calculated and
+displayed.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – number of similar words to visualize. By default, 5</p></li>
+<li><p><strong>n_dimensions</strong> (<em>str</em><em>, </em><em>optional</em>) – Visualize BERT embeddings either in ‘2d’ or
+‘3d’, defaults to ‘3d’</p></li>
+<li><p><strong>reduction_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Reduction strategy to choose. Can be either
+‘pca’ or ‘tsne’. Defaults to ‘pca’</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>optional</em>) – Random state for dimensionality reduction techniques,
+defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raise <cite>ValueError</cite> if <cite>n_dimensions</cite> takes an
+ilegal value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.plot_scatter_with_secondary_y_axis">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_scatter_with_secondary_y_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#utils.plotter.plot_scatter_with_secondary_y_axis" title="Link to this definition"></a></dt>
+<dd><p>Plot scatter plot with secondary y axis.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.project">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'pca'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'tsne'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_tsne_perplexity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_tsne_learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_tsne_n_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3000</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PCA</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">TSNE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.plotter.project" title="Link to this definition"></a></dt>
+<dd><p>Apply dimensionality reduction on an array-like input X using reduction
+techniques like the Principal Component Analysis (PCA) and the T-distributed
+Stochastic Neighbour Embedding (t-SNE).  The default values for the perplexity,
+learning rate and number of iterations have been empirically tuned to
+those that produced acceptable results consistently.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em> or </em><em>array-like</em>) – array of features.</p></li>
+<li><p><strong>n_components</strong> (<em>int</em>) – Dimension of the new embedded space (e.g., 2 for
+2D visualization, 3 for 3D visualization).</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>optional</em>) – Random state for dimensionality reduction techniques,
+defaults to None</p></li>
+<li><p><strong>reduction_strategy</strong> (<em>Literal</em><em>[</em><em>&quot;pca&quot;</em><em>, </em><em>&quot;tsne&quot;</em><em>]</em><em>, </em><em>optional</em>) – Reduction strategy to choose. Can be either
+‘pca’ or ‘tsne’. Defaults to ‘pca’</p></li>
+<li><p><strong>_tsne_perplexity</strong> (<em>int</em><em>, </em><em>optional</em>) – The perplexity is related to the number of
+nearest neighbors that is used in other manifold learning algorithms.
+Defaults to 5.</p></li>
+<li><p><strong>_tsne_learning_rate</strong> (<em>int</em><em>, </em><em>optional</em>) – The learning rate for t-SNE is usually
+in the range [10.0, 1000.0]. Defaults to 10.</p></li>
+<li><p><strong>_tsne_n_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations without progress
+to abort optimization process, defaults to 3000.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raise <cite>ValueError</cite> if <cite>reduction_stragy</cite> takes
+an ilegal value.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>projected data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(np.ndarray, Union[PCA, TSNE])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.scatter">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">scatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'pca'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'tsne'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_graph_showlegend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tsne_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">scatter_params</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PCA</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">TSNE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#utils.plotter.scatter" title="Link to this definition"></a></dt>
+<dd><p>Visualize BERT embeddings in a 2D scatterplot using dimensionality
+reduction techniques like Principal Component Analysis (PCA) and the T-distributed
+Stochastic Neighbour Embedding (t-SNE).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em> or </em><em>array-like</em>) – array of features.</p></li>
+<li><p><strong>color_text</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for plotly scatterplot <cite>color</cite> attribute.
+Defaults to None</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>optional</em>) – Random state for dimensionality reduction techniques,
+defaults to None</p></li>
+<li><p><strong>reduction_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Reduction strategy to choose. Can be either
+‘pca’ or ‘tsne’. Defaults to ‘pca’</p></li>
+<li><p><strong>_graph_showlegend</strong> (<em>bool</em><em>, </em><em>optional</em>) – Show legend, defaults to True</p></li>
+<li><p><strong>tsne_params</strong> – Additional parameters for t-SNE,
+defaults to {}</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.plotter.write_embeddings_to_disk">
+<span class="sig-prename descclassname"><span class="pre">utils.plotter.</span></span><span class="sig-name descname"><span class="pre">write_embeddings_to_disk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'runs/bert_embeddings'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_word_embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_position_embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type_embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#utils.plotter.write_embeddings_to_disk" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Utility to write embeddings weights to disk that can be loaded with</dt><dd><p>TensorBoard to visualize the embeddings.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>BertModel</em>) – Bert pretrained model.</p></li>
+<li><p><strong>vocab</strong> (<em>dict</em>) – Tokenizer vocabulary.</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to write the embeddings, defaults to
+‘runs/bert_embeddings’.</p></li>
+<li><p><strong>write_word_embeddings</strong> (<em>bool</em><em>, </em><em>optional</em>) – Write word embeddings to disk, defaults
+to True.</p></li>
+<li><p><strong>write_position_embeddings</strong> (<em>bool</em><em>, </em><em>optional</em>) – Write position embeddings to disk,
+defaults to False.</p></li>
+<li><p><strong>write_type_embeddings</strong> (<em>bool</em><em>, </em><em>optional</em>) – Write token type embeddings to disk,
+defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="code-used-for-experiments">
+<h1>Code used for experiments.<a class="headerlink" href="#code-used-for-experiments" title="Link to this heading"></a></h1>
+<p>Documentation for the experiments described in the dissertation document.</p>
+<section id="module-experiment_annoy_ntrees">
+<span id="speedup-recall-tradeoff-depending-on-the-number-of-trees-used-in-annoy-experiment-annoy-ntrees-py"></span><h2>Speedup-recall tradeoff depending on the number of trees used in ANNOY(<code class="docutils literal notranslate"><span class="pre">experiment_annoy_ntrees.py</span></code>)<a class="headerlink" href="#module-experiment_annoy_ntrees" title="Link to this heading"></a></h2>
+<p>Experiment to test peedup-recall tradeoff depending on the number of trees
+used in ANNOY.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="experiment_annoy_ntrees.evaluate_n_trees">
+<span class="sig-prename descclassname"><span class="pre">experiment_annoy_ntrees.</span></span><span class="sig-name descname"><span class="pre">evaluate_n_trees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_alg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#semantic_search.SemanticSearch" title="semantic_search.SemanticSearch"><span class="pre">SemanticSearch</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#experiment_annoy_ntrees.evaluate_n_trees" title="Link to this definition"></a></dt>
+<dd><p>Utility used to evaluate the speedup-recall tradeoff of ANNOY as
+the number of trees increases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queries</strong> (<em>list</em><em> or </em><em>array-like</em>) – Collection of textual queries.</p></li>
+<li><p><strong>search_alg</strong> (<a class="reference internal" href="#semantic_search.SemanticSearch" title="semantic_search.SemanticSearch"><em>SemanticSearch</em></a>) – Semantic search object.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Top k elements to consider in the comparison, defaults to 5</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Verbosity mode, defaults to True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-experiment_text_summarization">
+<span id="evaluate-text-summarization-using-different-values-of-k-top-sentences-experiment-text-summarization-py"></span><h2>Evaluate text summarization using different values of <em>k</em> top sentences (<code class="docutils literal notranslate"><span class="pre">experiment_text_summarization.py</span></code>)<a class="headerlink" href="#module-experiment_text_summarization" title="Link to this heading"></a></h2>
+<p>Experiment to evaluate text summarization using different values of <em>k</em> top
+sentences.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="experiment_text_summarization.evaluate_summarization_candidates">
+<span class="sig-prename descclassname"><span class="pre">experiment_text_summarization.</span></span><span class="sig-name descname"><span class="pre">evaluate_summarization_candidates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus_overviews</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertModel</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Language</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BertTokenizer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#experiment_text_summarization.evaluate_summarization_candidates" title="Link to this definition"></a></dt>
+<dd><p>Get an array of reduction rates and number of word pieces for a set of
+candidate number of sentences used to summarize each book overview (must
+be a list or array-like of integers).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus_overviews</strong> (<em>list</em><em> or </em><em>array-like</em>) – Book overviews.</p></li>
+<li><p><strong>candidates</strong> (<em>Iterable</em>) – List of number of candidates to evaluate.</p></li>
+<li><p><strong>embedder</strong> (<em>SentenceTransformer</em><em>, </em><em>optional</em>) – Instance of <cite>SentenceTransformer</cite>. If <cite>None</cite>, it loads the default
+pretrained sentence transformer model. Defaults to None.</p></li>
+<li><p><strong>spacy_model</strong> (<em>spacy.language.Language</em><em>, </em><em>optional</em>) – Pretrained tokenizer model. If <cite>None</cite>, it
+loads the default model. Defaults to None.</p></li>
+<li><p><strong>tokenizer</strong> (<em>BertTokenizer</em><em>, </em><em>optional</em>) – Instance of <cite>BertTokenizer</cite> class. If <cite>None</cite>, it loads the
+pretrained tokenizer of ‘bert-base-uncased’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Summarized overviews with at most <cite>candidates</cite> sentences.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation for the implementation of a real-time semantic retrieval system." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="search_usage.html" class="btn btn-neutral float-right" title="How to use the Information Retrieval framework." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
