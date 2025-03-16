@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation for the implementation of a real-time semantic retrieval system. &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Search (search.py)" href="code.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-semantic_search">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-lexical_search">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Documentation for the implementation of a real-time semantic retrieval system.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documentation-for-the-implementation-of-a-real-time-semantic-retrieval-system">
+<h1>Documentation for the implementation of a real-time semantic retrieval system.<a class="headerlink" href="#documentation-for-the-implementation-of-a-real-time-semantic-retrieval-system" title="Link to this heading"></a></h1>
+<p>The increasingly overwhelming amount of available natural language motivates the pressing need to find efficient and reliable computational techniques capable of processing and analysing this type of data for the purpose of achieving human-like natural language understanding for a wide range of downstream tasks.</p>
+<p>Over the last decade, Natural Language Processing (NLP) has seen impressively fast growth, primarily favoured by the increase in computational power and the progress on unsupervised learning in linguistics. Moreover, historically successful statistical language modeling techniques have been largely replaced by novel neural language modeling based on Deep Learning models, exhibiting an unprecedent level of natural language understanding, contributing to reduce the gap between human communication and computer understanding.</p>
+<p>NLP is the key to solve many technological challenges. Among the large number of applications this field has, and since this dissertation has been entirely focused on the study of different strategies to encode salient information about natural language, the experimental part of this work is primarily devoted to the implementation of a semantic information retrieval system, delivering search latencies suitable for real-time similarity matching.</p>
+<p>Of course, the examined unsupervised pretrained representations have been trained on humongous data sets, devoting to that end massive amounts of computational resources, something we do not have the access to.  It is, however, not only a matter of computational power.  Gathering, preparing and processing data for a model to be fine-tuned is no easy task and requires knowledge, to a great extent, of both the underlying theoretical motivations and the specific implementation. Consequently, our work is pretty much aligned with the mentality in which these strategies sit on: to directly use the pretrained models for downstream tasks.</p>
+<p>This document contains the documentation for all experiments conducted throughout the dissertation, including a thoroughly description of the implementation of the information retrieval system and the notebooks devoted to the dataset analysis and preprocessing and the analysis and visualization of BERT contextual embeddings.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code.html#search.Search"><code class="docutils literal notranslate"><span class="pre">Search</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-semantic_search">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code.html#semantic_search.SemanticSearch"><code class="docutils literal notranslate"><span class="pre">SemanticSearch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-lexical_search">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code.html#lexical_search.TfIdfSearch"><code class="docutils literal notranslate"><span class="pre">TfIdfSearch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code.html#module-utils.utils">Utils (<code class="docutils literal notranslate"><span class="pre">utils.py</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#module-utils.plotter">Plotter (<code class="docutils literal notranslate"><span class="pre">plotter.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code.html#module-experiment_annoy_ntrees">Speedup-recall tradeoff depending on the number of trees used in ANNOY(<code class="docutils literal notranslate"><span class="pre">experiment_annoy_ntrees.py</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#module-experiment_text_summarization">Evaluate text summarization using different values of <em>k</em> top sentences (<code class="docutils literal notranslate"><span class="pre">experiment_text_summarization.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="search_usage.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="search_usage.html#Semantic-search">Semantic search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="search_usage.html#Lexical-search">Lexical search</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html#Introduction.">Introduction.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html#Visualization-of-kNN-neighbours-of-BERT’s-pretrained-embeddings.">Visualization of kNN neighbours of BERT’s pretrained embeddings.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html#Exploring-BERT-contextual-representations.">Exploring BERT contextual representations.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Introduction.">Introduction.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Dataset-exploration.">Dataset exploration.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Remove-useless-features.">Remove useless features.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Integrate-book-overviews-into-the-dataset.">Integrate book overviews into the dataset.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Remove-instances-with-invalid-language-codes.">Remove instances with invalid language codes.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Remove-noisy-data-from-book-titles.">Remove noisy data from book titles.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Remove-noisy-data-from-book-overviews.">Remove noisy data from book overviews.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data%20preprocessing.html#Annex.-Code-to-perform-data-scraping.">Annex. Code to perform data scraping.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code.html" class="btn btn-neutral float-right" title="Search (search.py)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

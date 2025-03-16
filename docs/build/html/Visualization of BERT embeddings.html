@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualization of BERT embeddings. &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Exploratory data analysis and data preprocessing." href="Data%20preprocessing.html" />
+    <link rel="prev" title="How to use the Information Retrieval framework." href="search_usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#semantic-search-semantic-search-py">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#lexical-search-lexical-search-py">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visualization of BERT embeddings.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction.">Introduction.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Visualization-of-kNN-neighbours-of-BERT’s-pretrained-embeddings.">Visualization of kNN neighbours of BERT’s pretrained embeddings.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Visualizing-BERT-embeddings-with-Tensorboard.">Visualizing BERT embeddings with Tensorboard.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Exploring-BERT-contextual-representations.">Exploring BERT contextual representations.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Visualization of BERT embeddings.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Visualization of BERT embeddings.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Visualization-of-BERT-embeddings.">
+<h1>Visualization of BERT embeddings.<a class="headerlink" href="#Visualization-of-BERT-embeddings." title="Link to this heading"></a></h1>
+<section id="Introduction.">
+<h2>Introduction.<a class="headerlink" href="#Introduction." title="Link to this heading"></a></h2>
+<p>BERT embeddings have a dimensionality of 768. Salient linguistic features are be encoded along the representation of the word in a distributed fashion. This type of encoding scheme enables computer systems to handle semantic and syntactic information about natural language. Neural NLP poses as a high-dimensionality problem.</p>
+<p>In such setting, visualization techniques often imply using dimensionality reduction techniques. In this work, we propose the use of Principal Component Analysis (PCA) and the T-distributed Stochastic Neighbour Embedding (t-SNE).</p>
+<p>The following sections provide a general overview of different strategies to visualize BERT embeddings.</p>
+</section>
+<section id="Visualization-of-kNN-neighbours-of-BERT’s-pretrained-embeddings.">
+<h2>Visualization of kNN neighbours of BERT’s pretrained embeddings.<a class="headerlink" href="#Visualization-of-kNN-neighbours-of-BERT’s-pretrained-embeddings." title="Link to this heading"></a></h2>
+<p>The first test consist in gathering the WordPiece token embeddings weights learned through training of a BERT model for some query words to then find the k nearest neighbours to each word in the query. Let us first load all necessary libraries and modules.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.paths</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="c1"># Plotter module contain a bunch of utilities for</span>
+<span class="c1"># BERT embeddings visualization.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">plotter</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+c:\Users\David\Desktop\semIR\env3.11\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div></div>
+</div>
+<p>For the sake of simplicity, we decided to use BERT’s base uncased pretrained model. This model has way less parameters than the cased counterpart.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pretrained_model</span> <span class="o">=</span> <span class="s1">&#39;bert-base-uncased&#39;</span>
+
+<span class="c1"># Get BERT pretained model.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_bert_model</span><span class="p">(</span><span class="n">pretrained_model</span><span class="p">)</span>
+
+<span class="c1"># Get BERT precomputed tokenizer.</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_bert_tokenizer</span><span class="p">(</span><span class="n">pretrained_model</span><span class="p">)</span>
+
+<span class="c1"># Get tokenizer vocabulary.</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">vocab</span>
+
+<span class="c1"># To guarantee experiment reproducibility</span>
+<span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<p>It is worth mentioning that the way in which experiment has been run is not appropriate for BERT for several reasons. First and foremost, BERT derives context-sensitive subword representations. For BERT to actually derive the proper embedding for a specific token, some context (i.e., a sentence containing that word) must be provided. In the approach we are following, comparisons among representations make no use of context, which would just be fine for context-independent embeddings such as
+those derived by techniques like GloVe or Word2vec. Second, since no actual embeddings are being computed (i.e., the learned weights for each token in BERT’s vocab are instead used), all query words do necessarily need to belong to the BERT’s model vocab, hence noticeably constraining the range of possible words to use in the query. Under these assumptions, we consider this experiment can help the reader to have a better understanding of some of the concepts previously discussed, especially
+those concerning the linguistic regularities in continuous space word representations.</p>
+<hr class="docutils" />
+<p>The process is straightforward. Given a subset of BERT’s vocabulary tokens, get the learned embeddings and compute the k nearest neighbours to each query word. The set of neighbour candidates is the complete vocabulary used in BERT (30,000 tokens). Since it is a sine qua non condition that the query tokens belong to BERT’s vocab, the nearest neighbour for each query token is necessarily the token itself. We found that the easiest and computationally cheapest way to prevent this from happening is
+to get the <span class="math notranslate nohighlight">\(k+1\)</span> nearest neighbours to then discard those that are incorrect.</p>
+<p>Afterwards, the proper embeddings for the kNN of all query tokens are fed into one dimensionality reduction technique. Input data, originally in the 768-dimensional space, is compressed (projected) into either 2-dimensional or 3-dimensional representations.</p>
+<p>For further details, check the documentation for <code class="docutils literal notranslate"><span class="pre">plot_bert_embeddings_nn</span></code> method.</p>
+<p>In the dissertation we discussed that Word2vec embeddings were able to capture features like the notion of gender or the syntactic singular/plural relation. For this first query, we will be using again the word queen.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;queen&#39;</span>
+
+<span class="c1"># Format query words.</span>
+<span class="n">input_words</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="n">k</span><span class="o">=</span><span class="mi">8</span>
+
+<span class="c1"># Invoke method to plot PCA 2D projection of the embeddings</span>
+<span class="c1"># and a histogram for all nearest neighbours of the query</span>
+<span class="c1"># word embeddings.</span>
+<span class="n">fig_hist</span><span class="p">,</span> <span class="n">fig_scatter</span><span class="p">,</span> <span class="n">pca</span> <span class="o">=</span> <span class="n">plotter</span><span class="o">.</span><span class="n">plot_bert_embs_nn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                <span class="n">vocab</span><span class="p">,</span>
+                                <span class="n">input_words</span><span class="p">,</span>
+                                <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+                                <span class="n">reduction_strategy</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span>
+                                <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_scatter</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_hist</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([0.2512812, 0.1839905], dtype=float32)
+</pre></div></div>
+</div>
+<p>As it can be seen, the eight closest words to queen are, in order, king, queens, princess, empress, prince, duchess, countess and monarch. The results are astoundingly positive: all neighbours are reasonably related, either syntactically (e.g., queens) or semantically (e.g., king). Furthermore, the similarity scores obtained denote strong relativeness between the similar and query words.</p>
+<p>It is also worth noting that, excepting king and prince (which, on their own are fairly related to queen), all remaining nearest neighbours are royal titles held by women, which hints BERT embeddings capability to capture the notion of gender. Moreover, the words empress, countess, and duchess seem to be closer in space, probably due to syntactic similarities among them (i.e., they all are suffixed with “ess”).</p>
+<hr class="docutils" />
+<p>Let us now repeat the experiment using a set of queries</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">queries</span> <span class="o">=</span> <span class="s1">&#39;stupid, queen, wizard, spain, brother&#39;</span>
+
+<span class="c1"># Format query words.</span>
+<span class="n">input_words</span> <span class="o">=</span> <span class="n">queries</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="n">k</span><span class="o">=</span><span class="mi">5</span>
+
+<span class="c1"># Invoke method to plot T-SNE 2D projection of the embeddings</span>
+<span class="c1"># and a histogram for all nearest neighbours of the query</span>
+<span class="c1"># word embeddings.</span>
+<span class="n">fig_hist</span><span class="p">,</span> <span class="n">fig_scatter</span><span class="p">,</span> <span class="n">tsne</span> <span class="o">=</span> <span class="n">plotter</span><span class="o">.</span><span class="n">plot_bert_embs_nn</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">vocab</span><span class="p">,</span>
+    <span class="n">input_words</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+    <span class="n">reduction_strategy</span><span class="o">=</span><span class="s1">&#39;t-sne&#39;</span><span class="p">,</span>
+    <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+c:\Users\David\Desktop\semIR\env3.11\Lib\site-packages\sklearn\manifold\_t_sne.py:1164: FutureWarning:
+
+&#39;n_iter&#39; was renamed to &#39;max_iter&#39; in version 1.5 and will be removed in 1.7.
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_scatter</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_hist</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<p>Each query word, along with its most similar words in terms of cosine-similarity, conform a cluster. Unless query words are highly correlated, this is to expect. All nearest neighbours to the query words are intimately connected syntactically and/or semantically, with the cosine similarity scores indicating strong relatedness.</p>
+<p>Generally, some of the words populating the nearest neighbour set of each query word are synonyms (e.g., wizard and magician, stupid and dumb). Also, for the query word Spain, some of the most similar words are countries as well (e.g., Portugal, Italy). BERT embeddings showcase, once more, its capability to learn fine-grained features about natural language.</p>
+<section id="Visualizing-BERT-embeddings-with-Tensorboard.">
+<h3>Visualizing BERT embeddings with Tensorboard.<a class="headerlink" href="#Visualizing-BERT-embeddings-with-Tensorboard." title="Link to this heading"></a></h3>
+<p>Yet another manner to visualize BERT is using TensorBoard , the TensorFlow’s open source visualization toolkit which provides all the necessary logic to project the embeddings to a lower dimensional space and to make queries in real time. To that end, we have to write the word embeddings learned weights into disk using a utility described in the <code class="docutils literal notranslate"><span class="pre">plotter</span></code> python module.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Invoking a method that writes embeddings weights to disk that</span>
+<span class="c1"># can be loaded with TensorBoard to visualize the embeddings.</span>
+<span class="n">out_dir</span> <span class="o">=</span> <span class="s1">&#39;runs/bert_embeddings&#39;</span>
+<span class="c1"># plotter.write_embeddings_to_disk(model,</span>
+<span class="c1">#                                  vocab,</span>
+<span class="c1">#                                  out_dir=out_dir,</span>
+<span class="c1">#                                  write_word_embeddings=True,</span>
+<span class="c1">#                                  write_position_embeddings=False,</span>
+<span class="c1">#                                  write_type_embeddings=False)</span>
+</pre></div>
+</div>
+</div>
+<p>You can then run TensorBoard. For example, for <code class="docutils literal notranslate"><span class="pre">out_dir</span> <span class="pre">=</span> <span class="pre">'runs/bert_embeddings</span></code>, you would need to input the following command on a Python console:</p>
+<p><code class="docutils literal notranslate"><span class="pre">tensorboard</span> <span class="pre">--logdir=&quot;&lt;current</span> <span class="pre">notebook</span> <span class="pre">folder</span> <span class="pre">path&gt;\runs&quot;</span></code></p>
+<hr class="docutils" />
+</section>
+</section>
+<section id="Exploring-BERT-contextual-representations.">
+<h2>Exploring BERT contextual representations.<a class="headerlink" href="#Exploring-BERT-contextual-representations." title="Link to this heading"></a></h2>
+<p>In this experiment, we compute the embeddings of a word in different contexts (i.e., in different sentences) to evaluate whether there are significant differences among them.</p>
+<p>To that end, we used a public domain licensed dataset for word sense disambiguation (WSD) available in <a class="reference external" href="https://www.kaggle.com/udayarajdhungana/test-data-for-word-sense-disambiguation">Kaggle</a>. The dataset file is an excel file with three columns. The first is the serial number (SN), which assigns a unique identifier to each tuple of contextual sentence (second column) and target polysemous word contained in the sentence (third column).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PATH_WSD_DATASET</span> <span class="o">=</span> <span class="s1">&#39;visualization/test data for WSD evaluation _2905.xlsx&#39;</span>
+
+<span class="c1"># Load WSD dataset.</span>
+<span class="n">df_polysemy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">PATH_WSD_DATASET</span><span class="p">)</span>
+
+<span class="c1"># Set the serial number column as the index column.</span>
+<span class="n">df_polysemy</span> <span class="o">=</span> <span class="n">df_polysemy</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">df_polysemy</span><span class="o">.</span><span class="n">sn</span><span class="p">)</span>
+
+<span class="c1"># Let us sample ten random instances.</span>
+<span class="n">df_polysemy</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sn</th>
+      <th>sentence/context</th>
+      <th>polysemy_word</th>
+    </tr>
+    <tr>
+      <th>sn</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>583</th>
+      <td>583</td>
+      <td>I lost my AC remote.</td>
+      <td>remote</td>
+    </tr>
+    <tr>
+      <th>1812</th>
+      <td>1812</td>
+      <td>a young man is running</td>
+      <td>man</td>
+    </tr>
+    <tr>
+      <th>2250</th>
+      <td>2250</td>
+      <td>Crane is a large water bird.</td>
+      <td>crane</td>
+    </tr>
+    <tr>
+      <th>1653</th>
+      <td>1653</td>
+      <td>Insert the jack in the LAN port</td>
+      <td>jack</td>
+    </tr>
+    <tr>
+      <th>668</th>
+      <td>668</td>
+      <td>Thank you for your prompt reply.</td>
+      <td>prompt</td>
+    </tr>
+    <tr>
+      <th>515</th>
+      <td>515</td>
+      <td>She likes Russian pop song.</td>
+      <td>pop</td>
+    </tr>
+    <tr>
+      <th>619</th>
+      <td>619</td>
+      <td>Films are rated on a scale of poor, fair, good...</td>
+      <td>scale</td>
+    </tr>
+    <tr>
+      <th>2692</th>
+      <td>2692</td>
+      <td>The pilot is checking belly of plane</td>
+      <td>belly</td>
+    </tr>
+    <tr>
+      <th>2491</th>
+      <td>2491</td>
+      <td>We want to appeal to our core supporters witho...</td>
+      <td>core</td>
+    </tr>
+    <tr>
+      <th>937</th>
+      <td>937</td>
+      <td>Any type of single cut metal file can be used ...</td>
+      <td>file</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Let us now use one of the many polysemous words in the dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">polysemous_word</span><span class="o">=</span><span class="s1">&#39;bank&#39;</span>
+<span class="n">df_polysemy</span><span class="p">[</span><span class="n">df_polysemy</span><span class="p">[</span><span class="s1">&#39;polysemy_word&#39;</span><span class="p">]</span><span class="o">==</span> <span class="n">polysemous_word</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sn</th>
+      <th>sentence/context</th>
+      <th>polysemy_word</th>
+    </tr>
+    <tr>
+      <th>sn</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>I have bank account.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>Loan amount is approved by the bank.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>He returned to office after he deposited cash ...</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>They started using new software in their bank.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>he went to bank balance inquiry.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>I wonder why some bank have more interest rate...</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7</td>
+      <td>You have to deposit certain percentage of your...</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>8</td>
+      <td>He took loan from a Bank.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9</td>
+      <td>he is waking along the river bank.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>10</td>
+      <td>The red boat in the bank is already sold.</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>11</td>
+      <td>Spending time on the bank of Kaligandaki river...</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>12</td>
+      <td>He was sitting on sea bank with his friend</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>13</td>
+      <td>She has always dreamed of spending a vacation ...</td>
+      <td>bank</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>14</td>
+      <td>Bank of a river is very pleasant place to enjoy.</td>
+      <td>bank</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>As it can be seen, the dataset contains fourteen different sentences with the target word bank. Sentences from 1 to 8 refer to bank as as <em>“an organization where people and businesses can invest or borrow money, change it to foreign money, etc., or a building where these services are offered”</em>; whereas sentences from 9 to 14 refer to bank as a <em>“sloping raised land, especially along the sides of a river”</em> (definitions from Cambridge Dictionary). It would be desirable for BERT to be able to
+disambiguate both senses of the word, which would translate to being capable of deriving distant representations in the n-dimensional space for the different meanings of bank. As we have studied, the self-attention mechanism in BERT’s model architecture is responsible for baking into the representation of each word in a sequence salient information about the rest of the words in the sequence.</p>
+<p>For instance, the context words in the first three sentences are different and refer to distinct concepts (e.g., account, loan, amount, deposited, cash). That notwithstanding, they are all related because they all belong to a semantic field of interconnected words that can be used in similar contexts.</p>
+<p>Let us test whether BERT realizes this connection and embeds it into the resultant representations.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">context_embeddings</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">plotter</span><span class="o">.</span><span class="n">heatmap_embeddings</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                                             <span class="n">tokenizer</span><span class="p">,</span>
+                                                             <span class="n">df_polysemy</span><span class="p">,</span>
+                                                             <span class="n">polysemous_word</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Context sentence for each contextual embedding of &#39;bank&#39;.
+
+bank_1: I have bank account.
+bank_2: Loan amount is approved by the bank.
+bank_3: He returned to office after he deposited cash in the bank.
+bank_4: They started using new software in their bank.
+bank_5: he went to bank balance inquiry.
+bank_6: I wonder why some bank have more interest rate than others.
+bank_7: You have to deposit certain percentage of your salary in the bank.
+bank_8: He took loan from a Bank.
+bank_9: he is waking along the river bank.
+bank_10: The red boat in the bank is already sold.
+bank_11: Spending time on the bank of Kaligandaki river was his way of enjoying in his childhood.
+bank_12: He was sitting on sea bank with his friend
+bank_13: She has always dreamed of spending a vacation on a bank of Caribbean sea.
+bank_14: Bank of a river is very pleasant place to enjoy.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+<p>BERT seems capable of capturing such relations into the representations. Therefore, the embeddings for the target word when referred as a financial institution exhibit strong similarity. Analogously, the embeddings for bank in sentences from 9 to 14 are very similar, and they are all farther from those of sentences from 1 to 8, excepting that of the tenth sentence (arguably because the word sold is in the sentence).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">tsne</span> <span class="o">=</span> <span class="n">plotter</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">context_embeddings</span><span class="p">,</span>
+    <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">reduction_strategy</span><span class="o">=</span><span class="s1">&#39;tsne&#39;</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+    <span class="n">_graph_showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Projection for different contextual embeddings&#39;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+c:\Users\David\Desktop\semIR\env3.11\Lib\site-packages\sklearn\manifold\_t_sne.py:1164: FutureWarning:
+
+&#39;n_iter&#39; was renamed to &#39;max_iter&#39; in version 1.5 and will be removed in 1.7.
+
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="admonition warning">
+<p>Data type cannot be displayed: application/vnd.plotly.v1+json</p>
+</div>
+</div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="search_usage.html" class="btn btn-neutral float-left" title="How to use the Information Retrieval framework." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Data%20preprocessing.html" class="btn btn-neutral float-right" title="Exploratory data analysis and data preprocessing." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

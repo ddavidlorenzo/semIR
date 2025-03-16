@@ -1,0 +1,1424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exploratory data analysis and data preprocessing. &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Visualization of BERT embeddings." href="Visualization%20of%20BERT%20embeddings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#semantic-search-semantic-search-py">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#lexical-search-lexical-search-py">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exploratory data analysis and data preprocessing.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction.">Introduction.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Dataset-exploration.">Dataset exploration.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Remove-useless-features.">Remove useless features.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Integrate-book-overviews-into-the-dataset.">Integrate book overviews into the dataset.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Remove-instances-with-invalid-language-codes.">Remove instances with invalid language codes.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Remove-noisy-data-from-book-titles.">Remove noisy data from book titles.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Remove-noisy-data-from-book-overviews.">Remove noisy data from book overviews.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Annex.-Code-to-perform-data-scraping.">Annex. Code to perform data scraping.</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Exploratory data analysis and data preprocessing.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Data preprocessing.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Exploratory-data-analysis-and-data-preprocessing.">
+<h1>Exploratory data analysis and data preprocessing.<a class="headerlink" href="#Exploratory-data-analysis-and-data-preprocessing." title="Link to this heading"></a></h1>
+<section id="Introduction.">
+<h2>Introduction.<a class="headerlink" href="#Introduction." title="Link to this heading"></a></h2>
+<p>In our work, we will be using information about ten thousand books from the <a class="reference external" href="https://www.kaggle.com/zygmunt/goodbooks-10k?select=books.csv">goodbooks-10k</a> <a class="reference external" href="https://www.kaggle.com">kaggle</a> dataset. All the information was retrieved from <a class="reference external" href="https://www.goodreads.com/">Goodreads</a>, the world’s largest site for readers and book recommendations.</p>
+<p>The great majority of word and sentence embedding techniques are trained on large corpora, often involving processing a humongous number of books (e.g., Toronto Book Corpus). This results on representations that, out of the box, offer great performance for a wide variety of feature learning related tasks, often with little fine-tuning required.</p>
+</section>
+<section id="Dataset-exploration.">
+<h2>Dataset exploration.<a class="headerlink" href="#Dataset-exploration." title="Link to this heading"></a></h2>
+<p>Before getting started, it is first necessary to load all libraries and dependencies that will be used later in the notebook.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.paths</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+c:\Users\David\Desktop\semIR\env3.11\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div></div>
+</div>
+<p>Besides, we set a seed to guarantee reproducibility of the experiments.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<p>Let us now unzip containing the collection of books.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">shutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">unpack_archive</span>
+<span class="n">unpack_archive</span><span class="p">(</span><span class="n">PATH_DATASET_ZIP</span><span class="p">,</span> <span class="n">DIR_DATASET</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filepath</span> <span class="o">=</span> <span class="n">PATH_BOOKS</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To sample the first <em>n</em> instances of a dataset we can use the <code class="docutils literal notranslate"><span class="pre">head</span></code> function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>gr_book_id</th>
+      <th>gr_best_book_id</th>
+      <th>work_id</th>
+      <th>books_count</th>
+      <th>isbn</th>
+      <th>isbn13</th>
+      <th>authors</th>
+      <th>original_publication_year</th>
+      <th>original_title</th>
+      <th>...</th>
+      <th>ratings_count</th>
+      <th>work_ratings_count</th>
+      <th>work_text_reviews_count</th>
+      <th>ratings_1</th>
+      <th>ratings_2</th>
+      <th>ratings_3</th>
+      <th>ratings_4</th>
+      <th>ratings_5</th>
+      <th>image_url</th>
+      <th>small_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>2767052</td>
+      <td>2767052</td>
+      <td>2792775</td>
+      <td>272</td>
+      <td>439023483</td>
+      <td>9.780439e+12</td>
+      <td>Suzanne Collins</td>
+      <td>2008.0</td>
+      <td>The Hunger Games</td>
+      <td>...</td>
+      <td>4780653</td>
+      <td>4942365</td>
+      <td>155254</td>
+      <td>66715</td>
+      <td>127936</td>
+      <td>560092</td>
+      <td>1481305</td>
+      <td>2706317</td>
+      <td>https://images.gr-assets.com/books/1447303603m...</td>
+      <td>https://images.gr-assets.com/books/1447303603s...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4640799</td>
+      <td>491</td>
+      <td>439554934</td>
+      <td>9.780440e+12</td>
+      <td>J.K. Rowling, Mary GrandPré</td>
+      <td>1997.0</td>
+      <td>Harry Potter and the Philosopher's Stone</td>
+      <td>...</td>
+      <td>4602479</td>
+      <td>4800065</td>
+      <td>75867</td>
+      <td>75504</td>
+      <td>101676</td>
+      <td>455024</td>
+      <td>1156318</td>
+      <td>3011543</td>
+      <td>https://images.gr-assets.com/books/1474154022m...</td>
+      <td>https://images.gr-assets.com/books/1474154022s...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>41865</td>
+      <td>41865</td>
+      <td>3212258</td>
+      <td>226</td>
+      <td>316015849</td>
+      <td>9.780316e+12</td>
+      <td>Stephenie Meyer</td>
+      <td>2005.0</td>
+      <td>Twilight</td>
+      <td>...</td>
+      <td>3866839</td>
+      <td>3916824</td>
+      <td>95009</td>
+      <td>456191</td>
+      <td>436802</td>
+      <td>793319</td>
+      <td>875073</td>
+      <td>1355439</td>
+      <td>https://images.gr-assets.com/books/1361039443m...</td>
+      <td>https://images.gr-assets.com/books/1361039443s...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>2657</td>
+      <td>2657</td>
+      <td>3275794</td>
+      <td>487</td>
+      <td>61120081</td>
+      <td>9.780061e+12</td>
+      <td>Harper Lee</td>
+      <td>1960.0</td>
+      <td>To Kill a Mockingbird</td>
+      <td>...</td>
+      <td>3198671</td>
+      <td>3340896</td>
+      <td>72586</td>
+      <td>60427</td>
+      <td>117415</td>
+      <td>446835</td>
+      <td>1001952</td>
+      <td>1714267</td>
+      <td>https://images.gr-assets.com/books/1361975680m...</td>
+      <td>https://images.gr-assets.com/books/1361975680s...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>4671</td>
+      <td>4671</td>
+      <td>245494</td>
+      <td>1356</td>
+      <td>743273567</td>
+      <td>9.780743e+12</td>
+      <td>F. Scott Fitzgerald</td>
+      <td>1925.0</td>
+      <td>The Great Gatsby</td>
+      <td>...</td>
+      <td>2683664</td>
+      <td>2773745</td>
+      <td>51992</td>
+      <td>86236</td>
+      <td>197621</td>
+      <td>606158</td>
+      <td>936012</td>
+      <td>947718</td>
+      <td>https://images.gr-assets.com/books/1490528560m...</td>
+      <td>https://images.gr-assets.com/books/1490528560s...</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 23 columns</p>
+</div></div>
+</div>
+<p>Alternatively, we can use the <code class="docutils literal notranslate"><span class="pre">sample</span></code> function, which samples <em>n</em> random instances of the dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>gr_book_id</th>
+      <th>gr_best_book_id</th>
+      <th>work_id</th>
+      <th>books_count</th>
+      <th>isbn</th>
+      <th>isbn13</th>
+      <th>authors</th>
+      <th>original_publication_year</th>
+      <th>original_title</th>
+      <th>...</th>
+      <th>ratings_count</th>
+      <th>work_ratings_count</th>
+      <th>work_text_reviews_count</th>
+      <th>ratings_1</th>
+      <th>ratings_2</th>
+      <th>ratings_3</th>
+      <th>ratings_4</th>
+      <th>ratings_5</th>
+      <th>image_url</th>
+      <th>small_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9394</th>
+      <td>9394</td>
+      <td>38703</td>
+      <td>38703</td>
+      <td>575142</td>
+      <td>43</td>
+      <td>385733143</td>
+      <td>9.780386e+12</td>
+      <td>Louis Sachar</td>
+      <td>2006.0</td>
+      <td>Small Steps</td>
+      <td>...</td>
+      <td>11837</td>
+      <td>13095</td>
+      <td>1387</td>
+      <td>267</td>
+      <td>1177</td>
+      <td>4066</td>
+      <td>4471</td>
+      <td>3114</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/11...</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/50...</td>
+    </tr>
+    <tr>
+      <th>898</th>
+      <td>898</td>
+      <td>53835</td>
+      <td>53835</td>
+      <td>1959512</td>
+      <td>836</td>
+      <td>159308143X</td>
+      <td>9.781593e+12</td>
+      <td>Edith Wharton, Maureen Howard</td>
+      <td>1920.0</td>
+      <td>The Age of Innocence</td>
+      <td>...</td>
+      <td>102646</td>
+      <td>114994</td>
+      <td>5051</td>
+      <td>2359</td>
+      <td>6549</td>
+      <td>25631</td>
+      <td>42542</td>
+      <td>37913</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/11...</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/50...</td>
+    </tr>
+    <tr>
+      <th>2398</th>
+      <td>2398</td>
+      <td>43893</td>
+      <td>43893</td>
+      <td>1443364</td>
+      <td>47</td>
+      <td>765344300</td>
+      <td>9.780765e+12</td>
+      <td>Terry Goodkind</td>
+      <td>2003.0</td>
+      <td>Naked Empire (Sword of Truth, #8)</td>
+      <td>...</td>
+      <td>39682</td>
+      <td>42066</td>
+      <td>548</td>
+      <td>1519</td>
+      <td>3639</td>
+      <td>9953</td>
+      <td>12891</td>
+      <td>14064</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/11...</td>
+      <td>https://s.gr-assets.com/assets/nophoto/book/50...</td>
+    </tr>
+    <tr>
+      <th>5906</th>
+      <td>5906</td>
+      <td>31244</td>
+      <td>31244</td>
+      <td>2888469</td>
+      <td>378</td>
+      <td>375761144</td>
+      <td>9.780376e+12</td>
+      <td>Charles Dickens</td>
+      <td>1865.0</td>
+      <td>Our Mutual Friend</td>
+      <td>...</td>
+      <td>18599</td>
+      <td>20659</td>
+      <td>1102</td>
+      <td>434</td>
+      <td>986</td>
+      <td>3803</td>
+      <td>6936</td>
+      <td>8500</td>
+      <td>https://images.gr-assets.com/books/1403189244m...</td>
+      <td>https://images.gr-assets.com/books/1403189244s...</td>
+    </tr>
+    <tr>
+      <th>2343</th>
+      <td>2343</td>
+      <td>497199</td>
+      <td>497199</td>
+      <td>1132770</td>
+      <td>80</td>
+      <td>876852630</td>
+      <td>9.780877e+12</td>
+      <td>Charles Bukowski</td>
+      <td>1975.0</td>
+      <td>Factotum</td>
+      <td>...</td>
+      <td>37376</td>
+      <td>40444</td>
+      <td>1213</td>
+      <td>457</td>
+      <td>1875</td>
+      <td>8979</td>
+      <td>16585</td>
+      <td>12548</td>
+      <td>https://images.gr-assets.com/books/1407706616m...</td>
+      <td>https://images.gr-assets.com/books/1407706616s...</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 23 columns</p>
+</div></div>
+</div>
+<p>The dataset has 23 different features. Let us print the names of all the features in the dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;book_id&#39;, &#39;gr_book_id&#39;, &#39;gr_best_book_id&#39;, &#39;work_id&#39;, &#39;books_count&#39;,
+       &#39;isbn&#39;, &#39;isbn13&#39;, &#39;authors&#39;, &#39;original_publication_year&#39;,
+       &#39;original_title&#39;, &#39;title&#39;, &#39;language_code&#39;, &#39;average_rating&#39;,
+       &#39;ratings_count&#39;, &#39;work_ratings_count&#39;, &#39;work_text_reviews_count&#39;,
+       &#39;ratings_1&#39;, &#39;ratings_2&#39;, &#39;ratings_3&#39;, &#39;ratings_4&#39;, &#39;ratings_5&#39;,
+       &#39;image_url&#39;, &#39;small_image_url&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
+</div>
+<p>Here’s a brief description for the features in the dataset.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">books_count</span></code> represents the number of editions for a given work.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gr_best_book_id</span></code> contains the most popular edition for a given work.</p></li>
+<li><p>Columns <code class="docutils literal notranslate"><span class="pre">book_id</span></code>, <code class="docutils literal notranslate"><span class="pre">gr_book_id</span></code>, <code class="docutils literal notranslate"><span class="pre">gr_best_book_id</span></code>, <code class="docutils literal notranslate"><span class="pre">work_id</span></code>, <code class="docutils literal notranslate"><span class="pre">isbn</span></code> and <code class="docutils literal notranslate"><span class="pre">isbn13</span></code> are different identifiers for the book. As we will see later, the book overviews are not included in this dataset and have been obtained by means of scraping. Each overview is identified with the <code class="docutils literal notranslate"><span class="pre">gr_book_id</span></code> identifier, thus it is the link between both sources of information. Let us first check that it is a valid identifier (i.e., there are no null values and all identifiers are unique).</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique values in &#39;gr_book_id&#39; column: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">gr_book_id</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Print null values in &#39;gr_book_id&#39; column </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">gr_book_id</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">gr_book_id</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unique values in &#39;gr_book_id&#39; column: 10000
+Print null values in &#39;gr_book_id&#39; column Series([], Name: gr_book_id, dtype: int64)
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gr_book_id</span></code> is, in fact, a valid identifier, thus it is the one that we will be using. Furthermore, we also now know that there are no duplicated instances in the dataset, since at least one of its features has no repeated values. The remaining identifier columns can be deleted, as they do not provide any more meaningful information for the tasks that we are to perform.</p></li>
+<li><p>As the name suggests, <code class="docutils literal notranslate"><span class="pre">authors</span></code> contains the names of the authors of the book.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">original_publication_year</span></code> indicates the year in which the book was published. We will not be using this information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code> is the english title of the book.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">original_title</span></code> is the title of the book in its original language. We are primarily concerned with english textual information, hence <code class="docutils literal notranslate"><span class="pre">title</span></code> is a more suitable feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">language_code</span></code> indicates the textual code assigned to the language of the book. This feature is particularly useful because it will help us get rid of non-English books.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">average_rating</span></code> is a floating value indicating the average rating of a book, ranging from 1 to 5. This feature does not provide relevant information for semantic search, thus it will be discarded. That notwithstanding, it could be used as a criteria to filter the query results, prioritizing those that have better ratings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ratings_count</span></code> indicates the number of registered ratings for a book. Analogously, <code class="docutils literal notranslate"><span class="pre">work_ratings_count</span></code> and <code class="docutils literal notranslate"><span class="pre">work_text_reviews_count</span></code> indicate the number of ratings and reviews a work has in the platform, respectively. None of this information is useful for our work.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ratings_1</span></code>, <code class="docutils literal notranslate"><span class="pre">ratings_2</span></code>, <code class="docutils literal notranslate"><span class="pre">ratings_3</span></code>, <code class="docutils literal notranslate"><span class="pre">ratings_4</span></code> and <code class="docutils literal notranslate"><span class="pre">ratings_5</span></code> characteristics hold the counts for each rating value. Again, this feature does not provide any relevant information to perform semantic search.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image_url</span></code> and <code class="docutils literal notranslate"><span class="pre">small_image_url</span></code> contain links to pictures of the book cover. Since images cannot be displayed in CLIs, we will discard this information too.</p></li>
+</ul>
+</section>
+<section id="Remove-useless-features.">
+<h2>Remove useless features.<a class="headerlink" href="#Remove-useless-features." title="Link to this heading"></a></h2>
+<p>Let’s get rid of all not useful features.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns_to_drop</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gr_best_book_id&#39;</span><span class="p">,</span> <span class="s1">&#39;work_id&#39;</span><span class="p">,</span> <span class="s1">&#39;books_count&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;isbn&#39;</span><span class="p">,</span> <span class="s1">&#39;isbn13&#39;</span><span class="p">,</span> <span class="s1">&#39;original_publication_year&#39;</span><span class="p">,</span> <span class="s1">&#39;original_title&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;average_rating&#39;</span><span class="p">,</span><span class="s1">&#39;ratings_count&#39;</span><span class="p">,</span> <span class="s1">&#39;work_ratings_count&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;work_text_reviews_count&#39;</span><span class="p">,</span> <span class="s1">&#39;ratings_1&#39;</span><span class="p">,</span> <span class="s1">&#39;ratings_2&#39;</span><span class="p">,</span> <span class="s1">&#39;ratings_3&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;ratings_4&#39;</span><span class="p">,</span> <span class="s1">&#39;ratings_5&#39;</span><span class="p">,</span> <span class="s1">&#39;image_url&#39;</span><span class="p">,</span> <span class="s1">&#39;small_image_url&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gr_book_id</th>
+      <th>authors</th>
+      <th>title</th>
+      <th>language_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9394</th>
+      <td>38703</td>
+      <td>Louis Sachar</td>
+      <td>Small Steps (Holes, #2)</td>
+      <td>eng</td>
+    </tr>
+    <tr>
+      <th>898</th>
+      <td>53835</td>
+      <td>Edith Wharton, Maureen Howard</td>
+      <td>The Age of Innocence</td>
+      <td>eng</td>
+    </tr>
+    <tr>
+      <th>2398</th>
+      <td>43893</td>
+      <td>Terry Goodkind</td>
+      <td>Naked Empire (Sword of Truth, #8)</td>
+      <td>en-GB</td>
+    </tr>
+    <tr>
+      <th>5906</th>
+      <td>31244</td>
+      <td>Charles Dickens</td>
+      <td>Our Mutual Friend</td>
+      <td>eng</td>
+    </tr>
+    <tr>
+      <th>2343</th>
+      <td>497199</td>
+      <td>Charles Bukowski</td>
+      <td>Factotum</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Integrate-book-overviews-into-the-dataset.">
+<h2>Integrate book overviews into the dataset.<a class="headerlink" href="#Integrate-book-overviews-into-the-dataset." title="Link to this heading"></a></h2>
+<p>Now that all useless characteristics have been deleted, let’s append the overviews to the dataframe. The book overviews are stored in a directory, one <code class="docutils literal notranslate"><span class="pre">txt</span></code> file for each overview. We will first generate a dataframe containing all txt files in the directory. The filename for each <code class="docutils literal notranslate"><span class="pre">txt</span></code> file is the <code class="docutils literal notranslate"><span class="pre">gr_book_id</span></code> identifier.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">book_overviews</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">generate_dataframe_from_sparse_txts</span><span class="p">(</span><span class="n">DIR_OVERVIEW</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of overviews in the dataset: </span><span class="si">{</span><span class="n">book_overviews</span><span class="o">.</span><span class="n">overview</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">book_overviews</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of overviews in the dataset: 9956
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gr_book_id</th>
+      <th>overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>When Harry Potter and the Half-Blood Prince op...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10</td>
+      <td>Six years of magic, adventure, and mystery mak...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10000191</td>
+      <td>À sa naissance, Lisbeth est enlevée à sa mère ...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10006</td>
+      <td>The discovery of a mysterious notebook turns a...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1000751</td>
+      <td>When orphaned 11-year-old Pollyanna comes to l...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9951</th>
+      <td>9995135</td>
+      <td>At long last, New York Times bestselling autho...</td>
+    </tr>
+    <tr>
+      <th>9952</th>
+      <td>99955</td>
+      <td>Paine's daring prose paved the way for the Dec...</td>
+    </tr>
+    <tr>
+      <th>9953</th>
+      <td>9998</td>
+      <td>The Woman in the Dunes, by celebrated writer a...</td>
+    </tr>
+    <tr>
+      <th>9954</th>
+      <td>9998705</td>
+      <td>FLASH! Illuminated by lightning, a lifeless hu...</td>
+    </tr>
+    <tr>
+      <th>9955</th>
+      <td>9999107</td>
+      <td>Witty, moving, and brilliantly entertaining, T...</td>
+    </tr>
+  </tbody>
+</table>
+<p>9956 rows × 2 columns</p>
+</div></div>
+</div>
+<p>There are <span class="math notranslate nohighlight">\(9956\)</span> book overviews, which is less than the number of instances in the other dataframe. Consequently, at least <span class="math notranslate nohighlight">\(44\)</span> books will have no overview. There are several strategies to merge both dataframes. In this case, we will allow having books with no overview (<em>left join</em> operation).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">book_overviews</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;gr_book_id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;gr_book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gr_book_id</th>
+      <th>authors</th>
+      <th>title</th>
+      <th>language_code</th>
+      <th>overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2767052</td>
+      <td>Suzanne Collins</td>
+      <td>The Hunger Games (The Hunger Games, #1)</td>
+      <td>eng</td>
+      <td>Winning will make you famous. Losing means cer...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>J.K. Rowling, Mary GrandPré</td>
+      <td>Harry Potter and the Sorcerer's Stone (Harry P...</td>
+      <td>eng</td>
+      <td>Harry Potter's life is miserable. His parents ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>41865</td>
+      <td>Stephenie Meyer</td>
+      <td>Twilight (Twilight, #1)</td>
+      <td>en-US</td>
+      <td>About three things I was absolutely positive.F...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2657</td>
+      <td>Harper Lee</td>
+      <td>To Kill a Mockingbird</td>
+      <td>eng</td>
+      <td>The unforgettable novel of a childhood in a sl...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4671</td>
+      <td>F. Scott Fitzgerald</td>
+      <td>The Great Gatsby</td>
+      <td>eng</td>
+      <td>On its first publication in 1925, The Great Ga...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9995</th>
+      <td>7130616</td>
+      <td>Ilona Andrews</td>
+      <td>Bayou Moon (The Edge, #2)</td>
+      <td>eng</td>
+      <td>The Edge lies between worlds, on the border be...</td>
+    </tr>
+    <tr>
+      <th>9996</th>
+      <td>208324</td>
+      <td>Robert A. Caro</td>
+      <td>Means of Ascent (The Years of Lyndon Johnson, #2)</td>
+      <td>eng</td>
+      <td>Robert A. Caro's life of Lyndon Johnson, which...</td>
+    </tr>
+    <tr>
+      <th>9997</th>
+      <td>77431</td>
+      <td>Patrick O'Brian</td>
+      <td>The Mauritius Command</td>
+      <td>eng</td>
+      <td>"O'Brian's Aubrey-Maturin volumes actually con...</td>
+    </tr>
+    <tr>
+      <th>9998</th>
+      <td>8565083</td>
+      <td>Peggy Orenstein</td>
+      <td>Cinderella Ate My Daughter: Dispatches from th...</td>
+      <td>eng</td>
+      <td>The acclaimed author of the groundbreaking bes...</td>
+    </tr>
+    <tr>
+      <th>9999</th>
+      <td>8914</td>
+      <td>John Keegan</td>
+      <td>The First World War</td>
+      <td>NaN</td>
+      <td>The First World War created the modern world. ...</td>
+    </tr>
+  </tbody>
+</table>
+<p>10000 rows × 5 columns</p>
+</div></div>
+</div>
+</section>
+<section id="Remove-instances-with-invalid-language-codes.">
+<h2>Remove instances with invalid language codes.<a class="headerlink" href="#Remove-instances-with-invalid-language-codes." title="Link to this heading"></a></h2>
+<p>Let us now check whether there are noisy data in any of the selected characteristics. Starting off with the language code, we need to make sure that all data fed into the models is in English, being as they have been trained to derive semantic representations for English texts. To that end, let’s see how many language codes are in the dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">language_code</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([&#39;eng&#39;, &#39;en-US&#39;, &#39;en-CA&#39;, nan, &#39;spa&#39;, &#39;en-GB&#39;, &#39;fre&#39;, &#39;nl&#39;, &#39;ara&#39;,
+       &#39;por&#39;, &#39;ger&#39;, &#39;nor&#39;, &#39;jpn&#39;, &#39;en&#39;, &#39;vie&#39;, &#39;ind&#39;, &#39;pol&#39;, &#39;tur&#39;,
+       &#39;dan&#39;, &#39;fil&#39;, &#39;ita&#39;, &#39;per&#39;, &#39;swe&#39;, &#39;rum&#39;, &#39;mul&#39;, &#39;rus&#39;],
+      dtype=object)
+</pre></div></div>
+</div>
+<p>As it can be seen, there are plenty of different languages. However, is the title and the overview of the book written in the language indicated in <code class="docutils literal notranslate"><span class="pre">language_code</span></code>? Let’s test it on some of the books with <code class="docutils literal notranslate"><span class="pre">language_code</span> <span class="pre">=</span> <span class="pre">spa</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">language_code</span> <span class="o">==</span> <span class="s1">&#39;spa&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gr_book_id</th>
+      <th>authors</th>
+      <th>title</th>
+      <th>language_code</th>
+      <th>overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9472</th>
+      <td>53809</td>
+      <td>Paulo Coelho</td>
+      <td>Maktub</td>
+      <td>spa</td>
+      <td>Maktub não é um livro de conselhos, mas uma tr...</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>7677</td>
+      <td>Michael Crichton</td>
+      <td>Jurassic Park (Jurassic Park, #1)</td>
+      <td>spa</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9890</th>
+      <td>1365225</td>
+      <td>José Emilio Pacheco</td>
+      <td>Las batallas en el desierto</td>
+      <td>spa</td>
+      <td>Historia de un amor imposible, narración de un...</td>
+    </tr>
+    <tr>
+      <th>3751</th>
+      <td>140302</td>
+      <td>Agatha Christie</td>
+      <td>Poirot Investiga (Hércules Poirot, #3)</td>
+      <td>spa</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4508</th>
+      <td>63032</td>
+      <td>Roberto Bolaño</td>
+      <td>2666</td>
+      <td>spa</td>
+      <td>A cuatro profesores de literatura, Pelletier, ...</td>
+    </tr>
+    <tr>
+      <th>9222</th>
+      <td>61794</td>
+      <td>Anonymous</td>
+      <td>La vida del Lazarillo de Tormes</td>
+      <td>spa</td>
+      <td>Lázaro es un muchacho desarrapado a quien la m...</td>
+    </tr>
+    <tr>
+      <th>3476</th>
+      <td>31343</td>
+      <td>Anne Rice</td>
+      <td>Pandora (New Tales of the Vampires, #1)</td>
+      <td>spa</td>
+      <td>Anne Rice, creator of the Vampire Lestat, the ...</td>
+    </tr>
+    <tr>
+      <th>5125</th>
+      <td>53926</td>
+      <td>Mario Vargas Llosa</td>
+      <td>Travesuras de la niña mala</td>
+      <td>spa</td>
+      <td>¿Cuál es el verdadero rostro del amor?Ricardo ...</td>
+    </tr>
+    <tr>
+      <th>1799</th>
+      <td>22590</td>
+      <td>Philip K. Dick, David Alabort, Manuel Espín</td>
+      <td>Ubik</td>
+      <td>spa</td>
+      <td>Ubik (/ˈjuːbᵻk/ EW-bik) is a 1969 science fict...</td>
+    </tr>
+    <tr>
+      <th>555</th>
+      <td>10603</td>
+      <td>Stephen King</td>
+      <td>Cujo</td>
+      <td>spa</td>
+      <td>Outside a peaceful town in central Maine, a mo...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Since the title and the overview seems to be written in the language indicated in <code class="docutils literal notranslate"><span class="pre">language_code</span></code>, we will only choose those language codes mapped to English texts: <code class="docutils literal notranslate"><span class="pre">eng</span></code>, <code class="docutils literal notranslate"><span class="pre">en-US</span></code>, <code class="docutils literal notranslate"><span class="pre">en-CA</span></code>, <code class="docutils literal notranslate"><span class="pre">en-GB</span></code> and <code class="docutils literal notranslate"><span class="pre">en</span></code>. It is, however, still necessary to check the instances in which the value for the language code is <code class="docutils literal notranslate"><span class="pre">NaN</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;overview&#39;</span><span class="p">]][</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;language_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3241</th>
+      <td>Born Free: A Lioness of Two Worlds (Story of E...</td>
+      <td>There have been many accounts of the return to...</td>
+    </tr>
+    <tr>
+      <th>3050</th>
+      <td>Stone Soup</td>
+      <td>First published in 1947, this classic picture ...</td>
+    </tr>
+    <tr>
+      <th>4807</th>
+      <td>The Glass Magician (The Paper Magician Trilogy...</td>
+      <td>Three months after returning Magician Emery Th...</td>
+    </tr>
+    <tr>
+      <th>9918</th>
+      <td>Nothing's Fair in Fifth Grade</td>
+      <td>Jenny knows one thing for sure - Elsie Edwards...</td>
+    </tr>
+    <tr>
+      <th>3971</th>
+      <td>Experiencing God: Knowing and Doing the Will o...</td>
+      <td>Most Bible studies help people; this one chang...</td>
+    </tr>
+    <tr>
+      <th>9772</th>
+      <td>The Voyages of Doctor Dolittle (Doctor Dolittl...</td>
+      <td>The delightfully eccentric Doctor Dolittle, re...</td>
+    </tr>
+    <tr>
+      <th>8179</th>
+      <td>First Love</td>
+      <td>An extraordinary portrait of true love that wi...</td>
+    </tr>
+    <tr>
+      <th>2048</th>
+      <td>Ramona the Pest (Ramona, #2)</td>
+      <td>This is the second title in the hugely popular...</td>
+    </tr>
+    <tr>
+      <th>9559</th>
+      <td>Relentless (The Lost Fleet, #5)</td>
+      <td>After successfully freeing Alliance POWs, "Bla...</td>
+    </tr>
+    <tr>
+      <th>9240</th>
+      <td>Truth Will Prevail (The Work and the Glory, #3)</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>More than <span class="math notranslate nohighlight">\(10\%\)</span> of the data has no language code. We verified that all of them are in English, thus they do not have to be deleted. Furthermore, the <code class="docutils literal notranslate"><span class="pre">language_code</span></code> feature is no longer needed.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eng_lc</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;en&#39;</span><span class="p">,</span> <span class="s1">&#39;en-CA&#39;</span><span class="p">,</span> <span class="s1">&#39;en-US&#39;</span><span class="p">,</span> <span class="s1">&#39;en-GB&#39;</span><span class="p">,</span> <span class="s1">&#39;eng&#39;</span><span class="p">])</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">language_code</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">eng_lc</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">language_code</span><span class="o">.</span><span class="n">isna</span><span class="p">())]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;language_code&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gr_book_id</th>
+      <th>authors</th>
+      <th>title</th>
+      <th>overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7203</th>
+      <td>342994</td>
+      <td>Hans Christian Andersen, Rachel Isadora</td>
+      <td>The Little Match Girl</td>
+      <td>The wares of the poor little match girl illumi...</td>
+    </tr>
+    <tr>
+      <th>8399</th>
+      <td>53200</td>
+      <td>Stephen Hawking</td>
+      <td>Black Holes and Baby Universes</td>
+      <td>NY Times bestseller. 13 extraordinary essays s...</td>
+    </tr>
+    <tr>
+      <th>8179</th>
+      <td>17899392</td>
+      <td>James Patterson, Emily Raymond</td>
+      <td>First Love</td>
+      <td>An extraordinary portrait of true love that wi...</td>
+    </tr>
+    <tr>
+      <th>7047</th>
+      <td>2033217</td>
+      <td>Daniel Silva</td>
+      <td>Moscow Rules (Gabriel Allon, #8)</td>
+      <td>Now the death of a journalist leads Allon to R...</td>
+    </tr>
+    <tr>
+      <th>1091</th>
+      <td>17288661</td>
+      <td>John Grisham</td>
+      <td>Sycamore Row</td>
+      <td>Seth Hubbard is a wealthy man dying of lung ca...</td>
+    </tr>
+    <tr>
+      <th>2050</th>
+      <td>13872</td>
+      <td>Katherine Dunn</td>
+      <td>Geek Love</td>
+      <td>Geek Love is the story of the Binewskis, a car...</td>
+    </tr>
+    <tr>
+      <th>8558</th>
+      <td>1015311</td>
+      <td>Ken Akamatsu</td>
+      <td>Love Hina, Vol. 01</td>
+      <td>At the age of 5, Keitaro and his childhood swe...</td>
+    </tr>
+    <tr>
+      <th>6090</th>
+      <td>21849362</td>
+      <td>J.R. Ward</td>
+      <td>The Shadows (Black Dagger Brotherhood, #13)</td>
+      <td>Trez “Latimer” doesn’t really exist. And not j...</td>
+    </tr>
+    <tr>
+      <th>6774</th>
+      <td>7389</td>
+      <td>Brian K. Vaughan, Adrian Alphona</td>
+      <td>Runaways, Vol. 1: Pride and Joy (Runaways, #1)</td>
+      <td>Meet Alex, Karolina, Gert, Chase, Molly and Ni...</td>
+    </tr>
+    <tr>
+      <th>5760</th>
+      <td>522525</td>
+      <td>Carol Tavris, Elliot Aronson</td>
+      <td>Mistakes Were Made (But Not by Me): Why We Jus...</td>
+      <td>Why do people dodge responsibility when things...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Remove-noisy-data-from-book-titles.">
+<h2>Remove noisy data from book titles.<a class="headerlink" href="#Remove-noisy-data-from-book-titles." title="Link to this heading"></a></h2>
+<p>The nomenclature utilized for the book titles is as follows: <span class="math notranslate nohighlight">\(book\_title + (book\_saga\_name \ \#Nº\_book\_saga)\)</span>. Both the book title and the book saga can be valuable information. However, the book saga number, along with the # symbol may be removed. I have defined a method called <code class="docutils literal notranslate"><span class="pre">clean_book_title</span></code> that allows removing either all saga information or just the saga number.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">clean_book_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+7203                                The Little Match Girl
+8399                       Black Holes and Baby Universes
+8179                                           First Love
+7047                         Moscow Rules (Gabriel Allon)
+1091                                         Sycamore Row
+2050                                            Geek Love
+8558                                   Love Hina, Vol. 01
+6090               The Shadows (Black Dagger Brotherhood)
+6774           Runaways, Vol. 1: Pride and Joy (Runaways)
+5760    Mistakes Were Made (But Not by Me): Why We Jus...
+Name: title, dtype: object
+</pre></div></div>
+</div>
+</section>
+<section id="Remove-noisy-data-from-book-overviews.">
+<h2>Remove noisy data from book overviews.<a class="headerlink" href="#Remove-noisy-data-from-book-overviews." title="Link to this heading"></a></h2>
+<p>Luckily, text is automatically tokenized before being fed into any transformer model. That notwithstanding, there is still some work we need to do to clean our text beforehand, like removing special characters, removing extra blank spaces, etc. The <code class="docutils literal notranslate"><span class="pre">maketrans</span></code> built-in method comes handy. It enables us to create a mapping table. We can create an empty mapping table, but the third argument of this function allows us to list all of the characters to remove during the translation process. On the
+other hand, we will use the <code class="docutils literal notranslate"><span class="pre">re</span></code> module to work with regular expressions with python to further fix some wrong text patterns.</p>
+<p>For further details, please check the implementation included in the <code class="docutils literal notranslate"><span class="pre">utils</span></code> module for the <code class="docutils literal notranslate"><span class="pre">clean_overview</span></code> method. Let’s see an example:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">overview</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">gr_book_id</span> <span class="o">==</span> <span class="mi">5354</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s1">&#39;BEFORE cleaning:</span><span class="se">\n</span><span class="s1"> </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+    <span class="sa">f</span><span class="s1">&#39;AFTER cleaning:</span><span class="se">\n</span><span class="si">{</span><span class="n">utils</span><span class="o">.</span><span class="n">clean_overview</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+BEFORE cleaning:
+ Trumble is a minimum-security federal prison, a &#34;camp,&#34; home to the usual assortment of relatively harmless criminals--drug dealers, bank robbers, swindlers, embezzlers, tax evaders, two Wall Street crooks, one doctor, at least five lawyers.And three former judges who call themselves the Brethren: one from Texas, one from California, and one from Mississippi. They meet each day in the law library, their turf at Trumble, where they write briefs, handle cases for other inmates, practice law without a license, and sometimes dispense jailhouse justice. And they spend hours writing letters. They are fine-tuning a mail scam, and it&#39;s starting to really work. The money is pouring in.Then their little scam goes awry. It ensnares the wrong victim, a powerful man on the outside, a man with dangerous friends, and the Brethren&#39;s days of quietly marking time are over.
+
+AFTER cleaning:
+Trumble is a minimum-security federal prison, a camp, home to the usual assortment of relatively harmless criminals drug dealers, bank robbers, swindlers, embezzlers, tax evaders, two Wall Street crooks, one doctor, at least five lawyers. And three former judges who call themselves the Brethren: one from Texas, one from California, and one from Mississippi. They meet each day in the law library, their turf at Trumble, where they write briefs, handle cases for other inmates, practice law without a license, and sometimes dispense jailhouse justice. And they spend hours writing letters. They are fine-tuning a mail scam, and it&#39;s starting to really work. The money is pouring in. Then their little scam goes awry. It ensnares the wrong victim, a powerful man on the outside, a man with dangerous friends, and the Brethren&#39;s days of quietly marking time are over.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">overview</span> <span class="o">=</span> <span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">clean_overview</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">overview</span><span class="p">))</span> <span class="k">for</span> <span class="n">overview</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">overview</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+<p>Once the preprocessing is done, the dataframe can be exported to a CSV file to avoid repeating these steps everytime we need to work with the cleaned data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;gr_book_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">DIR_DATASET</span> <span class="o">+</span> <span class="s1">&#39;books_processed.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Annex.-Code-to-perform-data-scraping.">
+<h2>Annex. Code to perform data scraping.<a class="headerlink" href="#Annex.-Code-to-perform-data-scraping." title="Link to this heading"></a></h2>
+<p>The webpage for each book follow the format <code class="docutils literal notranslate"><span class="pre">https://www.goodreads.com/book/show/book_id</span></code>. For instance, <a class="reference external" href="https://www.goodreads.com/book/show/320">https://www.goodreads.com/book/show/320</a> is the page containing information for the book “One Hundred Years of Solitude” by Gabriel García Márquez.</p>
+<p>The overview is contained in an object called <code class="docutils literal notranslate"><span class="pre">readable</span> <span class="pre">stacked</span></code> that can be seen inspecting the code of the page.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scrap_book_overview</span><span class="p">(</span><span class="n">book_id</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Connect to the page</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://www.goodreads.com/book/show/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">book_id</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="c1"># Instantiate a BeautifulSoup object.</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+        <span class="c1"># Access to the component</span>
+        <span class="n">sec</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;readable stacked&quot;</span><span class="p">})</span>
+        <span class="c1"># Extract the overview</span>
+        <span class="n">overview</span> <span class="o">=</span> <span class="n">sec</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Store it, should you require it</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">overview</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;overviews/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">book_id</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.txt&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">overview</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">overview</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Visualization%20of%20BERT%20embeddings.html" class="btn btn-neutral float-left" title="Visualization of BERT embeddings." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

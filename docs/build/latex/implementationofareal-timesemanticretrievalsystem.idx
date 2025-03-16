@@ -1,0 +1,64 @@
+\indexentry{module@\spxentry{module}!semantic\_search@\spxentry{semantic\_search}|hyperpage}{3}
+\indexentry{semantic\_search@\spxentry{semantic\_search}!module@\spxentry{module}|hyperpage}{3}
+\indexentry{SemanticSearch (class in semantic\_search)@\spxentry{SemanticSearch}\spxextra{class in semantic\_search}|hyperpage}{3}
+\indexentry{\_\_init\_\_() (semantic\_search.SemanticSearch method)@\spxentry{\_\_init\_\_()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{3}
+\indexentry{annoy\_index() (semantic\_search.SemanticSearch property)@\spxentry{annoy\_index()}\spxextra{semantic\_search.SemanticSearch property}|hyperpage}{4}
+\indexentry{crossencoder() (semantic\_search.SemanticSearch property)@\spxentry{crossencoder()}\spxextra{semantic\_search.SemanticSearch property}|hyperpage}{4}
+\indexentry{search() (semantic\_search.SemanticSearch method)@\spxentry{search()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{4}
+\indexentry{search\_multiple() (semantic\_search.SemanticSearch method)@\spxentry{search\_multiple()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{4}
+\indexentry{setup\_annoy() (semantic\_search.SemanticSearch method)@\spxentry{setup\_annoy()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{5}
+\indexentry{setup\_crossencoder() (semantic\_search.SemanticSearch method)@\spxentry{setup\_crossencoder()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{5}
+\indexentry{test\_annoy\_performance() (semantic\_search.SemanticSearch method)@\spxentry{test\_annoy\_performance()}\spxextra{semantic\_search.SemanticSearch method}|hyperpage}{5}
+\indexentry{module@\spxentry{module}!lexical\_search@\spxentry{lexical\_search}|hyperpage}{7}
+\indexentry{lexical\_search@\spxentry{lexical\_search}!module@\spxentry{module}|hyperpage}{7}
+\indexentry{TfIdfSearch (class in lexical\_search)@\spxentry{TfIdfSearch}\spxextra{class in lexical\_search}|hyperpage}{7}
+\indexentry{\_\_init\_\_() (lexical\_search.TfIdfSearch method)@\spxentry{\_\_init\_\_()}\spxextra{lexical\_search.TfIdfSearch method}|hyperpage}{7}
+\indexentry{biencoder() (lexical\_search.TfIdfSearch property)@\spxentry{biencoder()}\spxextra{lexical\_search.TfIdfSearch property}|hyperpage}{8}
+\indexentry{crossencoder() (lexical\_search.TfIdfSearch property)@\spxentry{crossencoder()}\spxextra{lexical\_search.TfIdfSearch property}|hyperpage}{8}
+\indexentry{search() (lexical\_search.TfIdfSearch method)@\spxentry{search()}\spxextra{lexical\_search.TfIdfSearch method}|hyperpage}{8}
+\indexentry{search\_multiple() (lexical\_search.TfIdfSearch method)@\spxentry{search\_multiple()}\spxextra{lexical\_search.TfIdfSearch method}|hyperpage}{8}
+\indexentry{setup\_biencoder() (lexical\_search.TfIdfSearch method)@\spxentry{setup\_biencoder()}\spxextra{lexical\_search.TfIdfSearch method}|hyperpage}{8}
+\indexentry{setup\_crossencoder() (lexical\_search.TfIdfSearch method)@\spxentry{setup\_crossencoder()}\spxextra{lexical\_search.TfIdfSearch method}|hyperpage}{8}
+\indexentry{module@\spxentry{module}!code\_utils.utils@\spxentry{code\_utils.utils}|hyperpage}{11}
+\indexentry{code\_utils.utils@\spxentry{code\_utils.utils}!module@\spxentry{module}|hyperpage}{11}
+\indexentry{append\_overviews\_to\_data() (in module code\_utils.utils)@\spxentry{append\_overviews\_to\_data()}\spxextra{in module code\_utils.utils}|hyperpage}{11}
+\indexentry{clean\_book\_title() (in module code\_utils.utils)@\spxentry{clean\_book\_title()}\spxextra{in module code\_utils.utils}|hyperpage}{11}
+\indexentry{clean\_overview() (in module code\_utils.utils)@\spxentry{clean\_overview()}\spxextra{in module code\_utils.utils}|hyperpage}{12}
+\indexentry{compute\_avg\_wordpiece\_tokens() (in module code\_utils.utils)@\spxentry{compute\_avg\_wordpiece\_tokens()}\spxextra{in module code\_utils.utils}|hyperpage}{12}
+\indexentry{fix\_punctuation() (in module code\_utils.utils)@\spxentry{fix\_punctuation()}\spxextra{in module code\_utils.utils}|hyperpage}{12}
+\indexentry{generate\_dataframe\_from\_sparse\_txts() (in module code\_utils.utils)@\spxentry{generate\_dataframe\_from\_sparse\_txts()}\spxextra{in module code\_utils.utils}|hyperpage}{12}
+\indexentry{get\_bert\_model() (in module code\_utils.utils)@\spxentry{get\_bert\_model()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_bert\_tokenizer() (in module code\_utils.utils)@\spxentry{get\_bert\_tokenizer()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_crossencoder() (in module code\_utils.utils)@\spxentry{get\_crossencoder()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_dir\_files\_content() (in module code\_utils.utils)@\spxentry{get\_dir\_files\_content()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_file\_id\_and\_content() (in module code\_utils.utils)@\spxentry{get\_file\_id\_and\_content()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_sentence\_transformer() (in module code\_utils.utils)@\spxentry{get\_sentence\_transformer()}\spxextra{in module code\_utils.utils}|hyperpage}{13}
+\indexentry{get\_tokenized\_text() (in module code\_utils.utils)@\spxentry{get\_tokenized\_text()}\spxextra{in module code\_utils.utils}|hyperpage}{14}
+\indexentry{get\_top\_k\_sentences() (in module code\_utils.utils)@\spxentry{get\_top\_k\_sentences()}\spxextra{in module code\_utils.utils}|hyperpage}{14}
+\indexentry{load\_corpus() (in module code\_utils.utils)@\spxentry{load\_corpus()}\spxextra{in module code\_utils.utils}|hyperpage}{14}
+\indexentry{load\_embeddings() (in module code\_utils.utils)@\spxentry{load\_embeddings()}\spxextra{in module code\_utils.utils}|hyperpage}{14}
+\indexentry{makedir() (in module code\_utils.utils)@\spxentry{makedir()}\spxextra{in module code\_utils.utils}|hyperpage}{15}
+\indexentry{prepare\_input\_encoder() (in module code\_utils.utils)@\spxentry{prepare\_input\_encoder()}\spxextra{in module code\_utils.utils}|hyperpage}{15}
+\indexentry{remove\_filename\_from\_path() (in module code\_utils.utils)@\spxentry{remove\_filename\_from\_path()}\spxextra{in module code\_utils.utils}|hyperpage}{15}
+\indexentry{split\_text\_into\_sentences\_nltk() (in module code\_utils.utils)@\spxentry{split\_text\_into\_sentences\_nltk()}\spxextra{in module code\_utils.utils}|hyperpage}{15}
+\indexentry{split\_text\_into\_sentences\_spacy() (in module code\_utils.utils)@\spxentry{split\_text\_into\_sentences\_spacy()}\spxextra{in module code\_utils.utils}|hyperpage}{15}
+\indexentry{store\_embeddings() (in module code\_utils.utils)@\spxentry{store\_embeddings()}\spxextra{in module code\_utils.utils}|hyperpage}{16}
+\indexentry{summarize\_corpus\_overviews() (in module code\_utils.utils)@\spxentry{summarize\_corpus\_overviews()}\spxextra{in module code\_utils.utils}|hyperpage}{16}
+\indexentry{topk\_cos\_sim() (in module code\_utils.utils)@\spxentry{topk\_cos\_sim()}\spxextra{in module code\_utils.utils}|hyperpage}{16}
+\indexentry{module@\spxentry{module}!code\_utils.plotter@\spxentry{code\_utils.plotter}|hyperpage}{17}
+\indexentry{code\_utils.plotter@\spxentry{code\_utils.plotter}!module@\spxentry{module}|hyperpage}{17}
+\indexentry{apply\_dimensionality\_reduction() (in module code\_utils.plotter)@\spxentry{apply\_dimensionality\_reduction()}\spxextra{in module code\_utils.plotter}|hyperpage}{17}
+\indexentry{display\_embeddings\_scatterplot\_2D() (in module code\_utils.plotter)@\spxentry{display\_embeddings\_scatterplot\_2D()}\spxextra{in module code\_utils.plotter}|hyperpage}{17}
+\indexentry{display\_embeddings\_scatterplot\_3D() (in module code\_utils.plotter)@\spxentry{display\_embeddings\_scatterplot\_3D()}\spxextra{in module code\_utils.plotter}|hyperpage}{18}
+\indexentry{histogram\_embeddings\_nn() (in module code\_utils.plotter)@\spxentry{histogram\_embeddings\_nn()}\spxextra{in module code\_utils.plotter}|hyperpage}{18}
+\indexentry{plot\_bert\_embeddings\_nn() (in module code\_utils.plotter)@\spxentry{plot\_bert\_embeddings\_nn()}\spxextra{in module code\_utils.plotter}|hyperpage}{18}
+\indexentry{plot\_heatmap() (in module code\_utils.plotter)@\spxentry{plot\_heatmap()}\spxextra{in module code\_utils.plotter}|hyperpage}{19}
+\indexentry{plot\_heatmap\_embeddings() (in module code\_utils.plotter)@\spxentry{plot\_heatmap\_embeddings()}\spxextra{in module code\_utils.plotter}|hyperpage}{19}
+\indexentry{plot\_scatter\_with\_secondary\_y\_axis() (in module code\_utils.plotter)@\spxentry{plot\_scatter\_with\_secondary\_y\_axis()}\spxextra{in module code\_utils.plotter}|hyperpage}{19}
+\indexentry{write\_embeddings\_to\_disk() (in module code\_utils.plotter)@\spxentry{write\_embeddings\_to\_disk()}\spxextra{in module code\_utils.plotter}|hyperpage}{19}
+\indexentry{module@\spxentry{module}!experiment\_annoy\_ntrees@\spxentry{experiment\_annoy\_ntrees}|hyperpage}{21}
+\indexentry{experiment\_annoy\_ntrees@\spxentry{experiment\_annoy\_ntrees}!module@\spxentry{module}|hyperpage}{21}
+\indexentry{evaluate\_n\_trees() (in module experiment\_annoy\_ntrees)@\spxentry{evaluate\_n\_trees()}\spxextra{in module experiment\_annoy\_ntrees}|hyperpage}{21}
+\indexentry{module@\spxentry{module}!experiment\_text\_summarization@\spxentry{experiment\_text\_summarization}|hyperpage}{21}
+\indexentry{experiment\_text\_summarization@\spxentry{experiment\_text\_summarization}!module@\spxentry{module}|hyperpage}{21}
+\indexentry{evaluate\_summarization\_candidates() (in module experiment\_text\_summarization)@\spxentry{evaluate\_summarization\_candidates()}\spxextra{in module experiment\_text\_summarization}|hyperpage}{21}

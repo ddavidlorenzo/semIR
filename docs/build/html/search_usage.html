@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to use the Information Retrieval framework. &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Visualization of BERT embeddings." href="Visualization%20of%20BERT%20embeddings.html" />
+    <link rel="prev" title="Search (search.py)" href="code.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-semantic_search">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-lexical_search">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to use the Information Retrieval framework.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Setup">Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Load-dependencies">Load dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Search-parameters">Search parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Define-your-queries-and-k">Define your queries and <span class="math notranslate nohighlight">\(k\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Semantic-search">Semantic search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Standard-semantic-search">Standard semantic search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Sublinear-dense-retrieval-using-ANN">Sublinear dense retrieval using ANN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Bi-encoder-retrieval,-Cross-encoder-re-ranking">Bi-encoder retrieval, Cross-encoder re-ranking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Sublinear-Bi-encoder-retrieval,-Cross-encoder-re-ranking">Sublinear Bi-encoder retrieval, Cross-encoder re-ranking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Lexical-search">Lexical search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Standard-lexical-search">Standard lexical search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#TF-IDF-retrieval,-Bi-encoder-re-ranking">TF-IDF retrieval, Bi-encoder re-ranking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#TF-IDF-retrieval,-Cross-Encoder-re-ranking.">TF-IDF retrieval, Cross-Encoder re-ranking.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to use the Information Retrieval framework.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/search_usage.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="How-to-use-the-Information-Retrieval-framework.">
+<h1>How to use the Information Retrieval framework.<a class="headerlink" href="#How-to-use-the-Information-Retrieval-framework." title="Link to this heading"></a></h1>
+<p>Learn how to use the retrieval framework and exploit the different information retrieval pipelines.</p>
+<section id="Setup">
+<h2>Setup<a class="headerlink" href="#Setup" title="Link to this heading"></a></h2>
+<section id="Load-dependencies">
+<h3>Load dependencies<a class="headerlink" href="#Load-dependencies" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">semantic_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">SemanticSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lexical_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfIdfSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.paths</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Search-parameters">
+<h3>Search parameters<a class="headerlink" href="#Search-parameters" title="Link to this heading"></a></h3>
+<p>Define pretrained sentence transformer to perform semantic search.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Other tested pretrained models are &#39;paraphrase-distilroberta-base-v1&#39;</span>
+<span class="c1"># and &#39;msmarco-distilbert-base-v3&#39;</span>
+<span class="n">pretrained_model</span> <span class="o">=</span> <span class="s2">&quot;paraphrase-distilroberta-base-v2&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Define pretrained cross-encoder to perform re-ranking.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternative pretrained cross-encoders tested:</span>
+<span class="c1"># cross-encoders are &#39;cross-encoder/ms-marco-MiniLM-L-6-v2&#39;</span>
+<span class="n">pretrained_crossencoder</span> <span class="o">=</span> <span class="s2">&quot;cross-encoder/stsb-distilroberta-base&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Define the encoding stategy. The encoding strategy must be a string containing the names of the features to include into the input of the encoder, each of them separated by an underscore (’_’). For example, if you were to use the title and the overview as the encoding strategy, <code class="docutils literal notranslate"><span class="pre">encoding_strategy</span></code> must be either <code class="docutils literal notranslate"><span class="pre">title_overview</span></code> or <code class="docutils literal notranslate"><span class="pre">overview_title</span></code>. Current supported features are ‘title’, ‘authors’ and ‘overview’. For further information, have a look at the
+<code class="docutils literal notranslate"><span class="pre">utils.utils.prepare_input_encoder</span></code> function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encoding_strategy</span> <span class="o">=</span> <span class="s2">&quot;title_overview&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Define the number of trees to use in the ANNOY index.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_trees</span> <span class="o">=</span> <span class="mi">576</span>
+</pre></div>
+</div>
+</div>
+<p>Define the summarization strategy. Using the top 5 or 4 sentences is recommended. Use an empty string, <code class="docutils literal notranslate"><span class="pre">''</span></code> to eschew summarization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summarization</span> <span class="o">=</span> <span class="s2">&quot;top5sent&quot;</span>  <span class="c1">#&#39;top4sent&#39; #&#39;&#39;</span>
+</pre></div>
+</div>
+</div>
+<p>Load the corpus from disk. Beware that the loaded corpus must be consistent with the summarization technique you wish to use (e.g., for the ‘top5sent’ strategy, the dataset that must be is ‘books_processed_top5sent.csv’)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_corpus</span><span class="p">(</span><span class="n">PATH_BOOKS_TOP5S</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Define the filename from which the ANNOY index is to be stored/loaded from disk.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_annoy_cache</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DIR_ANNOY</span><span class="si">}{</span><span class="n">pretrained_model</span><span class="si">}</span><span class="s2">/t</span><span class="si">{</span><span class="n">n_trees</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">summarization</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">encoding_strategy</span><span class="si">}</span><span class="s2">.ann&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Define filepath from which computed embeddings for bi-encoder evaluation are stored/loaded from disk.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the directory does not exist, it will be automatically created.</span>
+<span class="n">path_embs_cache</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DIR_EMBEDDINGS</span><span class="si">}{</span><span class="n">pretrained_model</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">summarization</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">encoding_strategy</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Define filepath from which computed vector for TF-IDF evaluation are stored/loaded from disk.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the directory does not exist, it will be automatically created.</span>
+<span class="n">vectors_cache_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DIR_EMBEDDINGS</span><span class="si">}</span><span class="s2">tfidf/</span><span class="si">{</span><span class="n">summarization</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">encoding_strategy</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Function to print search results.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">search_title</span><span class="o">=</span><span class="s2">&quot;Search results.&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">search_title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Define-your-queries-and-k">
+<h3>Define your queries and <span class="math notranslate nohighlight">\(k\)</span><a class="headerlink" href="#Define-your-queries-and-k" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># List of queries written in natural language.</span>
+<span class="n">queries</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Best cooking recipes&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>Define the default number of most relevant documents to retrieve, <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Semantic-search">
+<h2>Semantic search<a class="headerlink" href="#Semantic-search" title="Link to this heading"></a></h2>
+<p>Instantiate a SemanticSearch object with the desired parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">semantic_search</span> <span class="o">=</span> <span class="n">SemanticSearch</span><span class="p">(</span>
+    <span class="n">corpus</span><span class="p">,</span>
+    <span class="n">path_embs_cache</span><span class="o">=</span><span class="n">path_embs_cache</span><span class="p">,</span>
+    <span class="n">encoding_strategy</span><span class="o">=</span><span class="n">encoding_strategy</span><span class="p">,</span>
+    <span class="n">path_annoy_cache</span><span class="o">=</span><span class="n">path_annoy_cache</span><span class="p">,</span>
+<span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<section id="Standard-semantic-search">
+<h3>Standard semantic search<a class="headerlink" href="#Standard-semantic-search" title="Link to this heading"></a></h3>
+<p>Use Bi-Encoder retrieval. Time complexity is <span class="math notranslate nohighlight">\(\mathcal{O}(n)\)</span></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">semantic_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s2">&quot;Standard semantic search&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:16:51,475 - [9284] - search - [biencoder] - INFO - Loading Bi-Encoder paraphrase-distilroberta-base-v2
+2025-03-14 16:16:52,953 - [9284] - search - [embeddings] - INFO - Retrieving embeddings from disk for Bi-Encoder paraphrase-distilroberta-base-v2  with encoding strategy &#39;title_overview&#39;
+2025-03-14 16:16:53,041 - [9284] - search - [_get_embeddings] - INFO - Fetched pre-computed embeddings from embeddings/paraphrase-distilroberta-base-v2/top5sent_title_overview.pkl
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Standard semantic search
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: The Taste of Home Cookbook -- (Score: 0.5897) (Goodreads Id: 3885)
+Authors: Janet Briggs, Beth Wittlinger
+Overview: More than 1,200 recipes including more than 135 light recipes are compiled in this sturdy five-ring binder.
+
+
+Title: The Way to Cook -- (Score: 0.5722) (Goodreads Id: 132688)
+Authors: Julia Child
+Overview: In this magnificent new cookbook, illustrated with full color throughout, Julia Child give us her magnum opus the distillation of a lifetime of cooking. In this spirit, Julia has conceived her most creative and instructive cookbook, blending classic techniques with free-style American cooking and with added emphasis on lightness, freshness, and simpler preparations. Breaking with conventional organization, she structures the chapters from Soups to Cakes &amp; Cookies around master recipes, giving all the reassuring details that she is so good at and grouping the recipes according to method; these are followed�in shorthand form�by innumerable variations that are easily made once the basics are understood. For example, make her simple but impeccably prepared sauté of chicken, and before long you&#39;re easily whipping up Chicken with Mushrooms and Cream, Chicken Provençale, Chicken Pipérade, or Chicken Marengo. A one-of-a-kind, brilliant, and inspiring book from the incomparable Julia, which is bound to rekindle interest in the satisfactions of good home cooking.
+
+
+Title: How to Cook Everything: Simple Recipes for Great Food -- (Score: 0.5326) (Goodreads Id: 603204)
+Authors: Mark Bittman
+Overview: Great Food Made Simple Here&#39;s the breakthrough one-stop cooking reference for today&#39;s generation of cooks! Nationally known cooking authority Mark Bittman shows you how to prepare great food for all occasions using simple techniques, fresh ingredients, and basic kitchen equipment. Just as important, How to Cook Everything takes a relaxed, straightforward approach to cooking, so you can enjoy yourself in the kitchen and still achieve outstanding results.
+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Sublinear-dense-retrieval-using-ANN">
+<h3>Sublinear dense retrieval using ANN<a class="headerlink" href="#Sublinear-dense-retrieval-using-ANN" title="Link to this heading"></a></h3>
+<p>Time complexity is <span class="math notranslate nohighlight">\(\mathcal{O}(\log n)\)</span></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Semantic search using ANNOY.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">semantic_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">use_annoy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s2">&quot;Semantic search using ANNOY.&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:16:53,138 - [9284] - search - [annoy] - INFO - Loading Annoy Index.
+2025-03-14 16:16:53,142 - [9284] - search - [get_annoy_index] - INFO - Loading ANNOY index from disk
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Semantic search using ANNOY.
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: The Taste of Home Cookbook -- (Score: 0.5897) (Goodreads Id: 3885)
+Authors: Janet Briggs, Beth Wittlinger
+Overview: More than 1,200 recipes including more than 135 light recipes are compiled in this sturdy five-ring binder.
+
+
+Title: The Way to Cook -- (Score: 0.5722) (Goodreads Id: 132688)
+Authors: Julia Child
+Overview: In this magnificent new cookbook, illustrated with full color throughout, Julia Child give us her magnum opus the distillation of a lifetime of cooking. In this spirit, Julia has conceived her most creative and instructive cookbook, blending classic techniques with free-style American cooking and with added emphasis on lightness, freshness, and simpler preparations. Breaking with conventional organization, she structures the chapters from Soups to Cakes &amp; Cookies around master recipes, giving all the reassuring details that she is so good at and grouping the recipes according to method; these are followed�in shorthand form�by innumerable variations that are easily made once the basics are understood. For example, make her simple but impeccably prepared sauté of chicken, and before long you&#39;re easily whipping up Chicken with Mushrooms and Cream, Chicken Provençale, Chicken Pipérade, or Chicken Marengo. A one-of-a-kind, brilliant, and inspiring book from the incomparable Julia, which is bound to rekindle interest in the satisfactions of good home cooking.
+
+
+Title: How to Cook Everything: Simple Recipes for Great Food -- (Score: 0.5326) (Goodreads Id: 603204)
+Authors: Mark Bittman
+Overview: Great Food Made Simple Here&#39;s the breakthrough one-stop cooking reference for today&#39;s generation of cooks! Nationally known cooking authority Mark Bittman shows you how to prepare great food for all occasions using simple techniques, fresh ingredients, and basic kitchen equipment. Just as important, How to Cook Everything takes a relaxed, straightforward approach to cooking, so you can enjoy yourself in the kitchen and still achieve outstanding results.
+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Bi-encoder-retrieval,-Cross-encoder-re-ranking">
+<h3>Bi-encoder retrieval, Cross-encoder re-ranking<a class="headerlink" href="#Bi-encoder-retrieval,-Cross-encoder-re-ranking" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Semantic search using Cross-encoder re-ranking.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">semantic_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">reranking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s2">&quot;Semantic search using Cross-encoder re-ranking.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:16:53,397 - [9284] - search - [crossencoder] - INFO - Loading Cross-Encoder cross-encoder/stsb-distilroberta-base
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Semantic search using Cross-encoder re-ranking.
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: How to Cook Everything: Simple Recipes for Great Food -- (Score: 0.7228) (Goodreads Id: 603204)
+Authors: Mark Bittman
+Overview: Great Food Made Simple Here&#39;s the breakthrough one-stop cooking reference for today&#39;s generation of cooks! Nationally known cooking authority Mark Bittman shows you how to prepare great food for all occasions using simple techniques, fresh ingredients, and basic kitchen equipment. Just as important, How to Cook Everything takes a relaxed, straightforward approach to cooking, so you can enjoy yourself in the kitchen and still achieve outstanding results.
+
+
+Title: The Joy of Cooking -- (Score: 0.6943) (Goodreads Id: 327847)
+Authors: Irma S. Rombauer, Marion Rombauer Becker, Ethan Becker
+Overview: Since its original publication, Joy of Cooking has been the most authoritative cookbook in America, the one upon which millions of cooks have confidently relied for more than sixty-five years. New chapters reflect changing American tastes and lifestyles:Separate new chapters on grains, beans, and pasta include recipes for grits, polenta, pilafs, risottos, vegetarian chills, bean casseroles, and make-ahead lasagnes. New baking and dessert chapters promise to enhance Joy of Cooking&#39;s reputation as a bible for bakers. From cover to cover, Joy&#39;s chapters have been imbued with the knowledge and passion of America&#39;s greatest cooks and cooking teachers. An invaluable combination of old and new, this edition of Joy of Cooking promises to keep you cooking for years to come.
+
+
+Title: The Unofficial Harry Potter Cookbook: From Cauldron Cakes to Knickerbocker Glory--More Than 150 Magical Recipes for Wizards and Non-Wizards Alike (Unofficial Cookbook) -- (Score: 0.6895) (Goodreads Id: 8281069)
+Authors: Dinah Bucholz
+Overview: Bangers and mash with Harry, Ron, and Hermione in the Hogwarts dining hall. A proper cuppa tea and rock cakes in Hagrid&#39;s hut. Cauldron cakes and pumpkin juice on the Hogwarts Express. With this cookbook, dining a la Hogwarts is as easy as Banoffi Pie! With more than 150 easy-to-make recipes, tips, and techniques, you can indulge in spellbindingly delicious meals drawn straight from the pages of your favorite Potter stories, such as:Treacle Tart Harry&#39;s favorite dessert, Molly&#39;s Meat Pies Mrs. Weasley&#39;s classic dish, Kreacher&#39;s French Onion Soup, Pumpkin Pasties a staple on the Hogwarts Express cartWith a dash of magic and a drop of creativity, you&#39;ll conjure up the entries, desserts, snacks, and drinks you need to transform ordinary Muggle meals into magickal culinary masterpieces, sure make even Mrs. Weasley proud!
+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Sublinear-Bi-encoder-retrieval,-Cross-encoder-re-ranking">
+<h3>Sublinear Bi-encoder retrieval, Cross-encoder re-ranking<a class="headerlink" href="#Sublinear-Bi-encoder-retrieval,-Cross-encoder-re-ranking" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Semantic search using ANNOY and Cross-encoder re-ranking.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">semantic_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">use_annoy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reranking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s2">&quot;Semantic search using ANNOY and Cross-encoder re-ranking.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Semantic search using ANNOY and Cross-encoder re-ranking.
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: How to Cook Everything: Simple Recipes for Great Food -- (Score: 0.7228) (Goodreads Id: 603204)
+Authors: Mark Bittman
+Overview: Great Food Made Simple Here&#39;s the breakthrough one-stop cooking reference for today&#39;s generation of cooks! Nationally known cooking authority Mark Bittman shows you how to prepare great food for all occasions using simple techniques, fresh ingredients, and basic kitchen equipment. Just as important, How to Cook Everything takes a relaxed, straightforward approach to cooking, so you can enjoy yourself in the kitchen and still achieve outstanding results.
+
+
+Title: The Joy of Cooking -- (Score: 0.6943) (Goodreads Id: 327847)
+Authors: Irma S. Rombauer, Marion Rombauer Becker, Ethan Becker
+Overview: Since its original publication, Joy of Cooking has been the most authoritative cookbook in America, the one upon which millions of cooks have confidently relied for more than sixty-five years. New chapters reflect changing American tastes and lifestyles:Separate new chapters on grains, beans, and pasta include recipes for grits, polenta, pilafs, risottos, vegetarian chills, bean casseroles, and make-ahead lasagnes. New baking and dessert chapters promise to enhance Joy of Cooking&#39;s reputation as a bible for bakers. From cover to cover, Joy&#39;s chapters have been imbued with the knowledge and passion of America&#39;s greatest cooks and cooking teachers. An invaluable combination of old and new, this edition of Joy of Cooking promises to keep you cooking for years to come.
+
+
+Title: The Unofficial Harry Potter Cookbook: From Cauldron Cakes to Knickerbocker Glory--More Than 150 Magical Recipes for Wizards and Non-Wizards Alike (Unofficial Cookbook) -- (Score: 0.6895) (Goodreads Id: 8281069)
+Authors: Dinah Bucholz
+Overview: Bangers and mash with Harry, Ron, and Hermione in the Hogwarts dining hall. A proper cuppa tea and rock cakes in Hagrid&#39;s hut. Cauldron cakes and pumpkin juice on the Hogwarts Express. With this cookbook, dining a la Hogwarts is as easy as Banoffi Pie! With more than 150 easy-to-make recipes, tips, and techniques, you can indulge in spellbindingly delicious meals drawn straight from the pages of your favorite Potter stories, such as:Treacle Tart Harry&#39;s favorite dessert, Molly&#39;s Meat Pies Mrs. Weasley&#39;s classic dish, Kreacher&#39;s French Onion Soup, Pumpkin Pasties a staple on the Hogwarts Express cartWith a dash of magic and a drop of creativity, you&#39;ll conjure up the entries, desserts, snacks, and drinks you need to transform ordinary Muggle meals into magickal culinary masterpieces, sure make even Mrs. Weasley proud!
+
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Lexical-search">
+<h2>Lexical search<a class="headerlink" href="#Lexical-search" title="Link to this heading"></a></h2>
+<p>Instantiate a TfIdfSearch object with the desired parameters.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tfidf_search</span> <span class="o">=</span> <span class="n">TfIdfSearch</span><span class="p">(</span>
+    <span class="n">corpus</span><span class="p">,</span>
+    <span class="n">vectors_cache_path</span><span class="o">=</span><span class="n">vectors_cache_path</span><span class="p">,</span>
+    <span class="n">encoding_strategy</span><span class="o">=</span><span class="n">encoding_strategy</span><span class="p">,</span>
+    <span class="n">path_embs_cache</span><span class="o">=</span><span class="n">path_embs_cache</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:17:11,474 - [9284] - search - [_get_vectors] - INFO - Loading precomputed vectors from disk
+</pre></div></div>
+</div>
+<section id="Standard-lexical-search">
+<h3>Standard lexical search<a class="headerlink" href="#Standard-lexical-search" title="Link to this heading"></a></h3>
+<p>Use TF-IDF retrieval. Time complexity is <span class="math notranslate nohighlight">\(\mathcal{O}(n)\)</span></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Standard lexical search</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">tfidf_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s1">&#39;Results for standard lexical search&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Results for standard lexical search
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: Better Homes and Gardens New Cook Book   -- (Score: 0.4852) (Goodreads Id: 411053)
+Authors: Better Homes and Gardens
+Overview: Features: Over 900 new recipes 1,200 in all-reflect current eating habits and lifestyles; 500 new photographs over 700 in all-including 60 percent more of finished food than the last edition; Dozens of new recipes offer ethnic flavours, fresh ingredients, or vegetarian appeal; Many recipes feature make-ahead directions or quick-to-the-table meals; New chapter provides recipes for crockery cookers; Efficient, easy-to-read format, with recipes categorised into 21 chapters, each thoroughly indexed for easy reference; Expanded chapter on cooking basics includes advice on food safety, menu planning, table setting, and make-ahead cooking, plus a thorough glossary on ingredients and techniques; Appliance-friendly recipes help cooks save time and creatively use new kitchen tools; Nutrition information with each recipe, plus diabetic exchanges; Contemporary food photography attracts browsers and helps cooks discover new recipes to make; Icons identify low-fat, no-fat, fast, and best-loved recipes; Every recipe tested and perfected by the Better Homes and Gardens Test Kitchen; Revised and updated cooking charts, ingredient photos, emergency substitutions, and equivalents; Respected, reliable kitchen reference with hundreds of cooking terms, tips, and techniques.
+
+
+Title: The Joy of Cooking -- (Score: 0.3935) (Goodreads Id: 327847)
+Authors: Irma S. Rombauer, Marion Rombauer Becker, Ethan Becker
+Overview: Since its original publication, Joy of Cooking has been the most authoritative cookbook in America, the one upon which millions of cooks have confidently relied for more than sixty-five years. New chapters reflect changing American tastes and lifestyles:Separate new chapters on grains, beans, and pasta include recipes for grits, polenta, pilafs, risottos, vegetarian chills, bean casseroles, and make-ahead lasagnes. New baking and dessert chapters promise to enhance Joy of Cooking&#39;s reputation as a bible for bakers. From cover to cover, Joy&#39;s chapters have been imbued with the knowledge and passion of America&#39;s greatest cooks and cooking teachers. An invaluable combination of old and new, this edition of Joy of Cooking promises to keep you cooking for years to come.
+
+
+Title: The New Best Recipe -- (Score: 0.3842) (Goodreads Id: 24019)
+Authors: Cook&#39;s Illustrated Magazine, John Burgoyne, Carl Tremblay
+Overview: The flagship book of the award-winning, best-selling series, is back-bigger and better than ever. Fully-updated and double the size of the original, this new edition boasts 22 chapters covering 1,000 foolproof recipes. 40% new recipes pack this 1,000-page, one-stop source for the best-tested recipes in America.
+
+
+</pre></div></div>
+</div>
+</section>
+<section id="TF-IDF-retrieval,-Bi-encoder-re-ranking">
+<h3>TF-IDF retrieval, Bi-encoder re-ranking<a class="headerlink" href="#TF-IDF-retrieval,-Bi-encoder-re-ranking" title="Link to this heading"></a></h3>
+<p>Hybrid search with TF-IDF retrieval and Bi-encoder re-ranking.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">tfidf_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">reranking_strategy</span><span class="o">=</span><span class="s1">&#39;biencoder&#39;</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s1">&#39;Results for hybrid search with TF-IDF retrieval and Bi-encoder re-ranking&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:17:13,169 - [9284] - search - [biencoder] - INFO - Loading Bi-Encoder paraphrase-distilroberta-base-v2
+2025-03-14 16:17:13,785 - [9284] - search - [embeddings] - INFO - Retrieving embeddings from disk for Bi-Encoder paraphrase-distilroberta-base-v2  with encoding strategy &#39;title_overview&#39;
+2025-03-14 16:17:13,844 - [9284] - search - [_get_embeddings] - INFO - Fetched pre-computed embeddings from embeddings/paraphrase-distilroberta-base-v2/top5sent_title_overview.pkl
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Results for hybrid search with TF-IDF retrieval and Bi-encoder re-ranking
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: Better Homes and Gardens New Cook Book   -- (Score: 0.5897) (Goodreads Id: 411053)
+Authors: Better Homes and Gardens
+Overview: Features: Over 900 new recipes 1,200 in all-reflect current eating habits and lifestyles; 500 new photographs over 700 in all-including 60 percent more of finished food than the last edition; Dozens of new recipes offer ethnic flavours, fresh ingredients, or vegetarian appeal; Many recipes feature make-ahead directions or quick-to-the-table meals; New chapter provides recipes for crockery cookers; Efficient, easy-to-read format, with recipes categorised into 21 chapters, each thoroughly indexed for easy reference; Expanded chapter on cooking basics includes advice on food safety, menu planning, table setting, and make-ahead cooking, plus a thorough glossary on ingredients and techniques; Appliance-friendly recipes help cooks save time and creatively use new kitchen tools; Nutrition information with each recipe, plus diabetic exchanges; Contemporary food photography attracts browsers and helps cooks discover new recipes to make; Icons identify low-fat, no-fat, fast, and best-loved recipes; Every recipe tested and perfected by the Better Homes and Gardens Test Kitchen; Revised and updated cooking charts, ingredient photos, emergency substitutions, and equivalents; Respected, reliable kitchen reference with hundreds of cooking terms, tips, and techniques.
+
+
+Title: The Joy of Cooking -- (Score: 0.5722) (Goodreads Id: 327847)
+Authors: Irma S. Rombauer, Marion Rombauer Becker, Ethan Becker
+Overview: Since its original publication, Joy of Cooking has been the most authoritative cookbook in America, the one upon which millions of cooks have confidently relied for more than sixty-five years. New chapters reflect changing American tastes and lifestyles:Separate new chapters on grains, beans, and pasta include recipes for grits, polenta, pilafs, risottos, vegetarian chills, bean casseroles, and make-ahead lasagnes. New baking and dessert chapters promise to enhance Joy of Cooking&#39;s reputation as a bible for bakers. From cover to cover, Joy&#39;s chapters have been imbued with the knowledge and passion of America&#39;s greatest cooks and cooking teachers. An invaluable combination of old and new, this edition of Joy of Cooking promises to keep you cooking for years to come.
+
+
+Title: The New Best Recipe -- (Score: 0.5326) (Goodreads Id: 24019)
+Authors: Cook&#39;s Illustrated Magazine, John Burgoyne, Carl Tremblay
+Overview: The flagship book of the award-winning, best-selling series, is back-bigger and better than ever. Fully-updated and double the size of the original, this new edition boasts 22 chapters covering 1,000 foolproof recipes. 40% new recipes pack this 1,000-page, one-stop source for the best-tested recipes in America.
+
+
+</pre></div></div>
+</div>
+</section>
+<section id="TF-IDF-retrieval,-Cross-Encoder-re-ranking.">
+<h3>TF-IDF retrieval, Cross-Encoder re-ranking.<a class="headerlink" href="#TF-IDF-retrieval,-Cross-Encoder-re-ranking." title="Link to this heading"></a></h3>
+<p>Hybrid search with TF-IDF retrieval and Cross-encoder re-ranking.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">tfidf_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">queries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">reranking_strategy</span><span class="o">=</span><span class="s1">&#39;crossencoder&#39;</span><span class="p">)</span>
+
+<span class="n">print_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s1">&#39;Results for hybrid search with TF-IDF retrieval and Cross-encoder re-ranking.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2025-03-14 16:17:13,948 - [9284] - search - [crossencoder] - INFO - Loading Cross-Encoder cross-encoder/stsb-distilroberta-base
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Results for hybrid search with TF-IDF retrieval and Cross-encoder re-ranking.
+======================
+
+Query: Best cooking recipes
+Top 3 most similar books in corpus:
+Title: How to Cook Everything: Simple Recipes for Great Food -- (Score: 0.7228) (Goodreads Id: 603204)
+Authors: Mark Bittman
+Overview: Great Food Made Simple Here&#39;s the breakthrough one-stop cooking reference for today&#39;s generation of cooks! Nationally known cooking authority Mark Bittman shows you how to prepare great food for all occasions using simple techniques, fresh ingredients, and basic kitchen equipment. Just as important, How to Cook Everything takes a relaxed, straightforward approach to cooking, so you can enjoy yourself in the kitchen and still achieve outstanding results.
+
+
+Title: The Joy of Cooking -- (Score: 0.6943) (Goodreads Id: 327847)
+Authors: Irma S. Rombauer, Marion Rombauer Becker, Ethan Becker
+Overview: Since its original publication, Joy of Cooking has been the most authoritative cookbook in America, the one upon which millions of cooks have confidently relied for more than sixty-five years. New chapters reflect changing American tastes and lifestyles:Separate new chapters on grains, beans, and pasta include recipes for grits, polenta, pilafs, risottos, vegetarian chills, bean casseroles, and make-ahead lasagnes. New baking and dessert chapters promise to enhance Joy of Cooking&#39;s reputation as a bible for bakers. From cover to cover, Joy&#39;s chapters have been imbued with the knowledge and passion of America&#39;s greatest cooks and cooking teachers. An invaluable combination of old and new, this edition of Joy of Cooking promises to keep you cooking for years to come.
+
+
+Title: Rachael Ray 365: No Repeats: A Year of Deliciously Different Dinners -- (Score: 0.6757) (Goodreads Id: 3882)
+Authors: Rachael Ray
+Overview: With her largest collection of recipes yet, Food Network’s indefatigable cook Rachael Ray guarantees you’ll be able to put something fresh and exciting on your dinner table every night for a full year... without a single repeat! Rachael offers dozens of recipes that, once mastered, can become entirely new dishes with just a few ingredient swaps. Best of all, these flavor-packed dishes will satisfy your every craving and renew your taste for cooking. With so many delicious entrees to choose from you’ll never have an excuse for being in a cooking rut again. With Rachael’s most varied and comprehensive collection of 30-minute recipes ever, you’ll have everyone at your table saying Yummo!
+
+
+</pre></div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code.html" class="btn btn-neutral float-left" title="Search (search.py)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Visualization%20of%20BERT%20embeddings.html" class="btn btn-neutral float-right" title="Visualization of BERT embeddings." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

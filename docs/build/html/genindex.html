@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; Implementation of a real-time semantic retrieval system.  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=22eb11a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Implementation of a real-time semantic retrieval system.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Search (<code class="docutils literal notranslate"><span class="pre">search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-semantic_search">Semantic search (<code class="docutils literal notranslate"><span class="pre">semantic_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#module-lexical_search">Lexical search (<code class="docutils literal notranslate"><span class="pre">lexical_search.py</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-utilities">Code utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html#code-used-for-experiments">Code used for experiments.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search_usage.html">How to use the Information Retrieval framework.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization%20of%20BERT%20embeddings.html">Visualization of BERT embeddings.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data%20preprocessing.html">Exploratory data analysis and data preprocessing.</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Implementation of a real-time semantic retrieval system.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#lexical_search.TfIdfSearch.__init__">__init__() (lexical_search.TfIdfSearch method)</a>
+
+      <ul>
+        <li><a href="code.html#search.Search.__init__">(search.Search method)</a>
+</li>
+        <li><a href="code.html#semantic_search.SemanticSearch.__init__">(semantic_search.SemanticSearch method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#semantic_search.SemanticSearch.annoy">annoy (semantic_search.SemanticSearch property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.append_overviews_to_data">append_overviews_to_data() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#search.Search.biencoder">biencoder (search.Search property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.clean_book_title">clean_book_title() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.clean_overview">clean_overview() (in module utils.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.compute_avg_wordpiece_tokens">compute_avg_wordpiece_tokens() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#search.Search.corpus">corpus (search.Search property)</a>
+</li>
+      <li><a href="code.html#search.Search.crossencoder">crossencoder (search.Search property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#search.Search.embeddings">embeddings (search.Search property)</a>
+</li>
+      <li><a href="code.html#search.Search.encoding_strategy">encoding_strategy (search.Search property)</a>
+</li>
+      <li><a href="code.html#experiment_annoy_ntrees.evaluate_n_trees">evaluate_n_trees() (in module experiment_annoy_ntrees)</a>
+</li>
+      <li><a href="code.html#experiment_text_summarization.evaluate_summarization_candidates">evaluate_summarization_candidates() (in module experiment_text_summarization)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    experiment_annoy_ntrees
+
+      <ul>
+        <li><a href="code.html#module-experiment_annoy_ntrees">module</a>
+</li>
+      </ul></li>
+      <li>
+    experiment_text_summarization
+
+      <ul>
+        <li><a href="code.html#module-experiment_text_summarization">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.fix_punctuation">fix_punctuation() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.generate_dataframe_from_sparse_txts">generate_dataframe_from_sparse_txts() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#semantic_search.SemanticSearch.get_annoy_index">get_annoy_index() (semantic_search.SemanticSearch method)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_bert_model">get_bert_model() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_bert_tokenizer">get_bert_tokenizer() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_crossencoder">get_crossencoder() (in module utils.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.get_dir_files_content">get_dir_files_content() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_file_id_and_content">get_file_id_and_content() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_logger">get_logger() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_sentence_transformer">get_sentence_transformer() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_tokenized_text">get_tokenized_text() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.get_top_k_sentences">get_top_k_sentences() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.plotter.heatmap">heatmap() (in module utils.plotter)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.plotter.heatmap_embeddings">heatmap_embeddings() (in module utils.plotter)</a>
+</li>
+      <li><a href="code.html#utils.plotter.histogram_embeddings_nn">histogram_embeddings_nn() (in module utils.plotter)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#search.Search.input_encoder">input_encoder (search.Search property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    lexical_search
+
+      <ul>
+        <li><a href="code.html#module-lexical_search">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.load_corpus">load_corpus() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.load_embeddings">load_embeddings() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#search.Search.logger">logger (search.Search property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.makedir">makedir() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#search.Search.max_seq_length">max_seq_length (search.Search property)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="code.html#module-experiment_annoy_ntrees">experiment_annoy_ntrees</a>
+</li>
+        <li><a href="code.html#module-experiment_text_summarization">experiment_text_summarization</a>
+</li>
+        <li><a href="code.html#module-lexical_search">lexical_search</a>
+</li>
+        <li><a href="code.html#module-search">search</a>
+</li>
+        <li><a href="code.html#module-semantic_search">semantic_search</a>
+</li>
+        <li><a href="code.html#module-utils.plotter">utils.plotter</a>
+</li>
+        <li><a href="code.html#module-utils.utils">utils.utils</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#search.Search.path_biencoder">path_biencoder (search.Search property)</a>
+</li>
+      <li><a href="code.html#search.Search.path_crossencoder">path_crossencoder (search.Search property)</a>
+</li>
+      <li><a href="code.html#search.Search.path_embs_cache">path_embs_cache (search.Search property)</a>
+</li>
+      <li><a href="code.html#utils.utils.pickle_dump">pickle_dump() (in module utils.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.pickle_load">pickle_load() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.plotter.plot_bert_embs_nn">plot_bert_embs_nn() (in module utils.plotter)</a>
+</li>
+      <li><a href="code.html#utils.plotter.plot_scatter_with_secondary_y_axis">plot_scatter_with_secondary_y_axis() (in module utils.plotter)</a>
+</li>
+      <li><a href="code.html#utils.utils.prepare_input_encoder">prepare_input_encoder() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.plotter.project">project() (in module utils.plotter)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.utils.remove_filename_from_path">remove_filename_from_path() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.plotter.scatter">scatter() (in module utils.plotter)</a>
+</li>
+      <li>
+    search
+
+      <ul>
+        <li><a href="code.html#module-search">module</a>
+</li>
+      </ul></li>
+      <li><a href="code.html#search.Search">Search (class in search)</a>
+</li>
+      <li><a href="code.html#lexical_search.TfIdfSearch.search">search() (lexical_search.TfIdfSearch method)</a>
+
+      <ul>
+        <li><a href="code.html#semantic_search.SemanticSearch.search">(semantic_search.SemanticSearch method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    semantic_search
+
+      <ul>
+        <li><a href="code.html#module-semantic_search">module</a>
+</li>
+      </ul></li>
+      <li><a href="code.html#semantic_search.SemanticSearch">SemanticSearch (class in semantic_search)</a>
+</li>
+      <li><a href="code.html#utils.utils.split_text_into_sentences_nltk">split_text_into_sentences_nltk() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.split_text_into_sentences_spacy">split_text_into_sentences_spacy() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.store_embeddings">store_embeddings() (in module utils.utils)</a>
+</li>
+      <li><a href="code.html#utils.utils.summarize_corpus_overviews">summarize_corpus_overviews() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#semantic_search.SemanticSearch.test_annoy_performance">test_annoy_performance() (semantic_search.SemanticSearch method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#lexical_search.TfIdfSearch">TfIdfSearch (class in lexical_search)</a>
+</li>
+      <li><a href="code.html#utils.utils.topk_cos_sim">topk_cos_sim() (in module utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    utils.plotter
+
+      <ul>
+        <li><a href="code.html#module-utils.plotter">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    utils.utils
+
+      <ul>
+        <li><a href="code.html#module-utils.utils">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#utils.plotter.write_embeddings_to_disk">write_embeddings_to_disk() (in module utils.plotter)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, David Lorenzo Alfaro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
