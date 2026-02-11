@@ -64,7 +64,7 @@ platformdirs==4.3.6
 plotly==6.0.0
 preshed==3.0.9
 prompt_toolkit==3.0.50
-protobuf==6.30.0
+protobuf==6.33.5
 psutil==7.0.0
 pure_eval==0.2.3
 pycodestyle==2.12.1
